@@ -1,289 +1,707 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=5.0, user-scalable=yes" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-S72LBY47R8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', "G-S72LBY47R8");
-    </script>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Pastebin.com - Not Found (#404)</title>
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <meta name="description" content="Pastebin.com is the number one paste tool since 2002. Pastebin is a website where you can store text online for a set period of time." />
-    <meta property="og:description" content="Pastebin.com is the number one paste tool since 2002. Pastebin is a website where you can store text online for a set period of time." />
-            <meta property="fb:app_id" content="231493360234820" />
-    <meta property="og:title" content="Pastebin.com - Not Found (#404)" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://pastebin.com/raw/placeholder" />
-    <meta property="og:image" content="https://pastebin.com/i/facebook.png" />
-    <meta property="og:site_name" content="Pastebin" />
-    <meta name="google-site-verification" content="jkUAIOE8owUXu8UXIhRLB9oHJsWBfOgJbZzncqHoF4A" />
-    <link rel="canonical" href="https://pastebin.com/raw/placeholder" />
-        <meta name="csrf-param" content="_csrf-frontend">
-<meta name="csrf-token" content="L0QUPQ0k5X6PKQNeRL8cZht3f9IOnI68xyiRYh8R1extHkdLeULWB8dMNBtz11MQWQUatkbPwPSWf-kvckS8oA==">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archon Consultancies — Precision. Control. Arquitectura.</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Share+Tech+Mono&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#050505;
+  --graphite:#0d0d0d;
+  --green:#39FF14;
+  --green-dim:#1a7a09;
+  --white:#f0f0f0;
+  --gray:#888;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Inter',sans-serif;
+  font-weight:300;
+  cursor:none;
+  overflow-x:hidden;
+}
 
-<link href="/assets/c80611c4/css/bootstrap.min.css" rel="stylesheet">
-<link href="/assets/d65ff796/dist/bootstrap-tagsinput.css" rel="stylesheet">        
-<link href="/themes/pastebin/css/vendors.bundle.css?30d6ece6979ee0cf5531" rel="stylesheet">
-<link href="/themes/pastebin/css/app.bundle.css?30d6ece6979ee0cf5531" rel="stylesheet">
-    </head>
-<body class="night-auto " data-pr="EykQt2a9" data-pa="" data-sar="1" data-abd="1" data-bd="1">
+/* CURSOR */
+.cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--green);
+  border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:30px;height:30px;
+  border:1px solid var(--green);
+  border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:all 0.15s ease;
+  opacity:0.5;
+}
 
+/* SCANLINES */
+body::before{
+  content:'';
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events:none;z-index:1000;
+}
 
-<svg style="height: 0; width: 0; position: absolute; visibility: hidden" xmlns="http://www.w3.org/2000/svg">
-    <symbol id="add" viewBox="0 0 1024 1024"><path fill="#ccc" d="M512 16C238 16 16 238 16 512s222 496 496 496 496-222 496-496S786 16 512 16z m288 552c0 13.2-10.8 24-24 24h-184v184c0 13.2-10.8 24-24 24h-112c-13.2 0-24-10.8-24-24v-184h-184c-13.2 0-24-10.8-24-24v-112c0-13.2 10.8-24 24-24h184v-184c0-13.2 10.8-24 24-24h112c13.2 0 24 10.8 24 24v184h184c13.2 0 24 10.8 24 24v112z"/></symbol>
-    <symbol id="search" viewBox="0 0 512 512"><path fill="#ccc" d="M354.2,216c0-38.2-13-70.7-40-97.7c-27-27-59.6-40-97.7-40s-70.7,13-97.7,40s-40,59.6-40,97.7 s13,70.7,40,97.7s59.6,40,97.7,40s70.7-13,97.7-40C340.2,285.8,354.2,253.2,354.2,216z M511.5,472c0,10.2-3.7,19.5-12.1,27.9 c-8.4,8.4-16.8,12.1-27.9,12.1c-11.2,0-20.5-3.7-27.9-12.1L339.3,393.8c-37.2,26.1-78.2,38.2-122.9,38.2 c-29.8,0-57.7-5.6-83.8-16.8c-27-11.2-50.3-27-68.9-46.5s-34.4-42.8-46.5-68.9C6.1,272.8,0.5,244.8,0.5,216s5.6-57.7,16.8-83.8 c11.2-27,27-50.3,46.5-68.9s42.8-34.4,68.9-46.5C159.7,5.6,187.6,0,216.4,0s57.7,5.6,83.8,16.8c27,11.2,50.3,27,68.9,46.5 c18.6,19.5,34.4,42.8,46.5,68.9c11.2,27,16.8,54.9,16.8,83.8c0,44.7-13,85.6-38.2,122.9L499.4,444 C507.8,451.5,511.5,460.8,511.5,472z"/></g></symbol>
-</svg>
-<div class="wrap">
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 60px;
+  z-index:100;
+  border-bottom:1px solid rgba(57,255,20,0.1);
+  background:rgba(5,5,5,0.9);
+  backdrop-filter:blur(10px);
+}
+.nav-logo{
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:22px;color:var(--white);
+  letter-spacing:2px;
+}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:3px;
+  color:var(--gray);text-decoration:none;
+  text-transform:uppercase;
+  transition:color 0.3s;
+}
+.nav-links a:hover{color:var(--green)}
 
-        
-        
-<div class="header">
-    <div class="container">
-        <div class="header__container">
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  padding:120px 40px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-grid{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:grid-pulse 4s ease-in-out infinite;
+}
+@keyframes grid-pulse{
+  0%,100%{opacity:0.5}
+  50%{opacity:1}
+}
+.hero-eyebrow{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:6px;
+  color:var(--green);text-transform:uppercase;
+  margin-bottom:30px;
+  animation:fade-in 1s ease forwards;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(60px,10vw,140px);
+  line-height:0.9;
+  letter-spacing:-2px;
+  margin-bottom:20px;
+  animation:fade-up 1s ease 0.2s both;
+}
+.hero-title .line-green{color:var(--green);display:block}
+.hero-title .line-white{color:var(--white);display:block}
+.hero-sub{
+  font-size:16px;line-height:1.8;
+  color:var(--gray);max-width:560px;
+  margin:30px auto;
+  font-weight:300;
+  animation:fade-up 1s ease 0.4s both;
+}
+.hero-sub strong{color:var(--white);font-weight:500}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--green);color:var(--black);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  padding:18px 40px;
+  text-decoration:none;
+  font-weight:bold;
+  margin-top:20px;
+  transition:all 0.3s;
+  animation:fade-up 1s ease 0.6s both;
+  position:relative;
+  overflow:hidden;
+}
+.hero-cta::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:rgba(255,255,255,0.2);
+  transition:left 0.3s;
+}
+.hero-cta:hover::before{left:100%}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(57,255,20,0.4)}
+.hero-counter{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--green-dim);
+  letter-spacing:2px;margin-top:16px;
+  animation:fade-up 1s ease 0.8s both;
+}
 
-                        <div class="header__left">
-                <a class="header__logo" href="/">
-                    Pastebin                </a>
+/* PROBLEM SECTION */
+.section{padding:100px 60px;max-width:1200px;margin:0 auto}
+.section-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:6px;color:var(--green);
+  text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::before{
+  content:'';width:30px;height:1px;background:var(--green);
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,6vw,80px);
+  line-height:1;margin-bottom:40px;
+}
+.problem-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(57,255,20,0.1);margin-top:60px;
+}
+.problem-card{
+  background:var(--black);
+  padding:40px 30px;
+  border:1px solid rgba(57,255,20,0.08);
+  transition:border-color 0.3s,background 0.3s;
+  position:relative;overflow:hidden;
+}
+.problem-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--green);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s;
+}
+.problem-card:hover::before{transform:scaleX(1)}
+.problem-card:hover{background:rgba(57,255,20,0.03)}
+.problem-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:80px;color:rgba(57,255,20,0.08);
+  line-height:1;margin-bottom:10px;
+}
+.problem-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;color:var(--white);
+  margin-bottom:12px;letter-spacing:1px;
+}
+.problem-text{font-size:13px;color:var(--gray);line-height:1.8}
+.problem-text strong{color:var(--green)}
 
-                <div class="header__links h_1024">
-                    
-                                        <a href="/doc_api">API</a>
-                    <a href="/tools">tools</a>
-                    <a href="/faq">faq</a>
-                                    </div>
+/* ARCHITECTURE */
+.arch-section{
+  padding:100px 60px;
+  background:var(--graphite);
+  border-top:1px solid rgba(57,255,20,0.1);
+  border-bottom:1px solid rgba(57,255,20,0.1);
+}
+.arch-inner{max-width:1200px;margin:0 auto}
+.arch-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:2px;margin-top:60px;
+  background:rgba(57,255,20,0.1);
+}
+.arch-card{
+  background:var(--graphite);
+  padding:50px 40px;
+  transition:background 0.3s;
+}
+.arch-card:hover{background:rgba(57,255,20,0.04)}
+.arch-icon{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:4px;color:var(--green);
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.arch-icon::before{
+  content:'';width:20px;height:1px;background:var(--green);
+}
+.arch-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;margin-bottom:8px;
+}
+.arch-tag{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--green);
+  letter-spacing:2px;margin-bottom:16px;
+}
+.arch-desc{font-size:13px;color:var(--gray);line-height:1.9}
 
-                <a class="header__btn" href="/">
-                    <span>paste</span>
-                </a>
+/* SERVICES */
+.services-section{padding:100px 60px;max-width:1200px;margin:0 auto}
+.service-list{margin-top:60px}
+.service-item{
+  display:grid;grid-template-columns:80px 1fr auto;
+  align-items:start;gap:40px;
+  padding:40px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  transition:border-color 0.3s;
+  cursor:default;
+}
+.service-item:hover{border-bottom-color:rgba(57,255,20,0.3)}
+.service-item:hover .service-name{color:var(--green)}
+.service-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:48px;color:rgba(57,255,20,0.15);
+  line-height:1;
+}
+.service-content{}
+.service-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:30px;letter-spacing:1px;
+  margin-bottom:10px;transition:color 0.3s;
+}
+.service-desc{font-size:13px;color:var(--gray);line-height:1.8;max-width:500px}
+.service-badge{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--black);
+  background:var(--green);
+  padding:6px 16px;
+  white-space:nowrap;
+  align-self:center;
+}
+.service-badge.recurring{
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green);
+}
 
-                
-                <div class="header__search">
-                                            <form id="w0" class="search_form" action="https://pastebin.com/search" method="get">
-                            
-<input type="text" id="q" class="search_input" name="q" maxlength="128" placeholder="Search...">
+/* AUDIT CTA */
+.audit-section{
+  padding:120px 60px;
+  background:var(--graphite);
+  border-top:1px solid rgba(57,255,20,0.1);
+  text-align:center;
+}
+.audit-inner{max-width:700px;margin:0 auto}
+.audit-timer{
+  font-family:'Share Tech Mono',monospace;
+  font-size:80px;color:var(--green);
+  line-height:1;margin-bottom:10px;
+  text-shadow:0 0 40px rgba(57,255,20,0.3);
+}
+.audit-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:6px;color:var(--gray);
+  text-transform:uppercase;margin-bottom:40px;
+}
+.audit-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  margin-bottom:20px;line-height:1;
+}
+.audit-desc{
+  font-size:15px;color:var(--gray);
+  line-height:1.9;margin-bottom:50px;
+}
+.audit-form{
+  display:flex;flex-direction:column;gap:16px;
+  max-width:480px;margin:0 auto;
+}
+.audit-form input,
+.audit-form select{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(57,255,20,0.2);
+  color:var(--white);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;letter-spacing:1px;
+  padding:16px 20px;
+  outline:none;
+  transition:border-color 0.3s;
+  -webkit-appearance:none;
+}
+.audit-form input::placeholder{color:rgba(255,255,255,0.2)}
+.audit-form input:focus,
+.audit-form select:focus{border-color:var(--green)}
+.audit-form select option{background:var(--black)}
+.audit-submit{
+  background:var(--green);color:var(--black);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;letter-spacing:4px;text-transform:uppercase;
+  padding:18px;border:none;
+  font-weight:bold;cursor:none;
+  transition:all 0.3s;
+  position:relative;overflow:hidden;
+}
+.audit-submit:hover{
+  box-shadow:0 0 60px rgba(57,255,20,0.5);
+  transform:translateY(-2px);
+}
+.audit-disclaimer{
+  font-size:11px;color:rgba(255,255,255,0.2);
+  margin-top:20px;letter-spacing:1px;
+}
 
+/* FOOTER */
+footer{
+  padding:60px;
+  border-top:1px solid rgba(57,255,20,0.1);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-logo{
+  font-family:'UnifrakturMaguntia',cursive;
+  font-size:20px;
+}
+.footer-logo span{color:var(--green)}
+.footer-tagline{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:3px;color:var(--gray);
+  margin-top:6px;
+}
+.footer-links{
+  display:flex;gap:30px;list-style:none;
+}
+.footer-links a{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:2px;color:var(--gray);
+  text-decoration:none;text-transform:uppercase;
+  transition:color 0.3s;
+}
+.footer-links a:hover{color:var(--green)}
+.footer-copy{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:rgba(255,255,255,0.15);
+  letter-spacing:2px;
+}
 
+/* ANIMATIONS */
+@keyframes fade-in{
+  from{opacity:0}to{opacity:1}
+}
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity 0.8s ease,transform 0.8s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-                            <button type="submit" class="search_btn" aria-label="Search"><svg class="icon search"><use xlink:href="#search"></use></svg></button>
-                        </form>                                    </div>
+/* TICKER */
+.ticker{
+  background:var(--green);
+  padding:10px 0;overflow:hidden;
+  white-space:nowrap;
+}
+.ticker-inner{
+  display:inline-flex;gap:60px;
+  animation:ticker 20s linear infinite;
+}
+.ticker-item{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:3px;
+  color:var(--black);text-transform:uppercase;
+  font-weight:bold;
+}
+@keyframes ticker{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
 
-            </div>
+/* DIVIDER */
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(57,255,20,0.3),transparent);
+}
 
-                        <div class="header__right">
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:16px 24px}
+  .nav-links{display:none}
+  .hero{padding:100px 24px 60px}
+  .section{padding:60px 24px}
+  .problem-grid{grid-template-columns:1fr}
+  .arch-section{padding:60px 24px}
+  .arch-grid{grid-template-columns:1fr}
+  .services-section{padding:60px 24px}
+  .service-item{grid-template-columns:50px 1fr;gap:20px}
+  .service-badge{display:none}
+  .audit-section{padding:80px 24px}
+  footer{flex-direction:column;gap:30px;padding:40px 24px;text-align:center}
+  .footer-links{flex-wrap:wrap;justify-content:center}
+}
+</style>
+</head>
+<body>
 
-                                    <div class="header_sign">
-                        <a href="/login" class="btn-sign sign-in">Login</a>
-                        <a href="/signup" class="btn-sign sign-up">Sign up</a>
-                    </div>
-                
-            </div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-        </div>
-    </div>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Archon <span>Consultancies</span></div>
+  <ul class="nav-links">
+    <li><a href="#problema">El Problema</a></li>
+    <li><a href="#arquitectura">Arquitectura</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#auditoria">Auditoria</a></li>
+  </ul>
+</nav>
 
+<!-- TICKER -->
+<div class="ticker" style="margin-top:72px">
+  <div class="ticker-inner">
+    <span class="ticker-item">Precision</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Control</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Arquitectura</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Infraestructura Algoritmica</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Operativa 24/7</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Cero Errores Manuales</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Precision</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Control</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Arquitectura</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Infraestructura Algoritmica</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Operativa 24/7</span>
+    <span class="ticker-item">⚙</span>
+    <span class="ticker-item">Cero Errores Manuales</span>
+    <span class="ticker-item">⚙</span>
+  </div>
 </div>
-        
 
-    <div class="container">
-        <div class="content">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <p class="hero-eyebrow">⚠ Archon Consultancies — Sistema Activo</p>
+  <h1 class="hero-title">
+    <span class="line-white">Tu negocio se</span>
+    <span class="line-green">desangra.</span>
+    <span class="line-white">Y ni lo sabes.</span>
+  </h1>
+  <p class="hero-sub">
+    Cada pedido copiado a mano. Cada Excel desincronizado. Cada dirección introducida dos veces. No es ineficiencia — es <strong>hemorragia operativa en tiempo real</strong>. Tenemos el bisturi.
+  </p>
+  <a href="#auditoria" class="hero-cta">Auditoría gratuita — 33 minutos</a>
+  <p class="hero-counter">[ Sin coste. Sin humo. Solo datos. ]</p>
+</section>
 
-                        
-                        
-                                    
-            
-            
-<div class="page -top -right">
+<div class="divider"></div>
 
-    <div class="content__title">Not Found (#404)</div>
-    <div class="content__text">
-        <div class="notice -no-margin">
-            Page not found.        </div>
+<!-- PROBLEMA -->
+<section id="problema">
+  <div class="section">
+    <p class="section-label reveal">Diagnostico</p>
+    <h2 class="section-title reveal">El 80% de las tiendas<br>gestionan su logistica<br><span style="color:var(--green)">como en 2010.</span></h2>
+    <div class="problem-grid reveal">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <div class="problem-title">La Hemorragia de Datos</div>
+        <p class="problem-text">Tu inventario vive en el panel vulnerable de tu web. Un solo fallo del servidor y pierdes el control total del stock. <strong>Datos sin blindar = capital en riesgo.</strong></p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <div class="problem-title">El Error Humano</div>
+        <p class="problem-text">1 pedido equivocado = doble coste de envio + producto perdido + cliente enfadado. El cerebro humano no fue disenado para <strong>40 decisiones criticas por hora.</strong></p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <div class="problem-title">La Fuga de Capital</div>
+        <p class="problem-text">Cada proceso manual que tienes activo es dinero que no ves salir. Lo contamos en minutos, lo medimos en euros. <strong>La ineficiencia tiene precio exacto.</strong></p>
+      </div>
     </div>
+  </div>
+</section>
 
-</div>
-            <div style="clear: both;"></div>
-
-                                </div>
-
-        <div class="sidebar h_1024">
-            
-
-
-
-                
-    <div class="sidebar__title">
-        <a href="/archive">Public Pastes</a>
+<!-- ARQUITECTURA -->
+<section id="arquitectura" class="arch-section">
+  <div class="arch-inner">
+    <p class="section-label reveal">La Solucion</p>
+    <h2 class="section-title reveal">La Arquitectura<br><span style="color:var(--green)">Archon</span></h2>
+    <div class="arch-grid reveal">
+      <div class="arch-card">
+        <div class="arch-icon">Modulo 01</div>
+        <div class="arch-name">La Caja Fuerte</div>
+        <div class="arch-tag">Airtable — Base de datos relacional</div>
+        <p class="arch-desc">Extraemos tus datos del panel vulnerable y los blindamos en una base de datos externa. El inventario real vive aqui, a prueba de caidas del servidor y de errores humanos. Tu stock nunca mas en riesgo.</p>
+      </div>
+      <div class="arch-card">
+        <div class="arch-icon">Modulo 02</div>
+        <div class="arch-name">Las Arterias</div>
+        <div class="arch-tag">Make / n8n — Sistema nervioso central</div>
+        <p class="arch-desc">Construimos las tuberias para que tu tienda online hable con tu banco y con tu almacen en milisegundos. Sin intervencion humana. Sin delays. Sin errores de transcripcion. Pago confirmado, etiqueta generada.</p>
+      </div>
+      <div class="arch-card">
+        <div class="arch-icon">Modulo 03</div>
+        <div class="arch-name">La Aduana</div>
+        <div class="arch-tag">Stripe — Seguridad criptografica</div>
+        <p class="arch-desc">Configuracion de webhooks estrictos. Ningun pedido pasa a preparacion si el sistema no recibe confirmacion criptografica de pago. Status = paid. Solo entonces avanza. Cero fraudes, cero pedidos sin cobrar.</p>
+      </div>
+      <div class="arch-card">
+        <div class="arch-icon">Modulo 04</div>
+        <div class="arch-name">El Supervisor</div>
+        <div class="arch-tag">IA — Vigilancia permanente</div>
+        <p class="arch-desc">Nodos de inteligencia artificial integrados que auditan direcciones, detectan anomalias en pedidos y redactan notificaciones personalizadas al cliente de forma automatica. El sistema que no duerme.</p>
+      </div>
     </div>
-    <ul class="sidebar__menu">
+  </div>
+</section>
 
-                    <li>
-                <a href="/k27WZWtt?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    4 min ago
-                    | 0.53 KB                </div>
-            </li>
-                    <li>
-                <a href="/e0SAMRHD?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    13 min ago
-                    | 0.72 KB                </div>
-            </li>
-                    <li>
-                <a href="/bGFYwmN0?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    18 min ago
-                    | 0.63 KB                </div>
-            </li>
-                    <li>
-                <a href="/wGmzun76?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    25 min ago
-                    | 0.53 KB                </div>
-            </li>
-                    <li>
-                <a href="/SsPkLeDG?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    1 hour ago
-                    | 11.50 KB                </div>
-            </li>
-                    <li>
-                <a href="/Jr8KebSG?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    3 hours ago
-                    | 7.81 KB                </div>
-            </li>
-                    <li>
-                <a href="/F5PRJxzi?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    3 hours ago
-                    | 1.21 KB                </div>
-            </li>
-                    <li>
-                <a href="/7X1u0QfT?source=public_pastes">Untitled</a>
-                <div class="details">
-                    
-                    4 hours ago
-                    | 1.55 KB                </div>
-            </li>
-        
-    </ul>
-            
-
-    <div class="sidebar__sticky -on">
-                    </div>
-        </div>
+<!-- SERVICIOS -->
+<section id="servicios" class="services-section">
+  <p class="section-label reveal">Menu Archon</p>
+  <h2 class="section-title reveal">Lo que<br><span style="color:var(--green)">construimos</span></h2>
+  <div class="service-list reveal">
+    <div class="service-item">
+      <div class="service-num">00</div>
+      <div class="service-content">
+        <div class="service-name">Auditoria Operativa</div>
+        <p class="service-desc">33 minutos. Diseccion clinica de tu operativa actual. Te mostramos exactamente por donde se desangra tu negocio con datos reales. Sin compromiso. Sin humo.</p>
+      </div>
+      <div class="service-badge">Gratis</div>
     </div>
-</div>
-
-
-    
-<div class="top-footer">
-    <a class="icon-link -size-24-24 -chrome" href="/tools#chrome" title="Google Chrome Extension"></a>
-    <a class="icon-link -size-24-24 -firefox" href="/tools#firefox" title="Firefox Extension"></a>
-    <a class="icon-link -size-24-24 -iphone" href="/tools#iphone" title="iPhone/iPad Application"></a>
-    <a class="icon-link -size-24-24 -windows" href="/tools#windows" title="Windows Desktop Application"></a>
-    <a class="icon-link -size-24-24 -android" href="/tools#android" title="Android Application"></a>
-    <a class="icon-link -size-24-24 -macos" href="/tools#macos" title="MacOS X Widget"></a>
-    <a class="icon-link -size-24-24 -opera" href="/tools#opera" title="Opera Extension"></a>
-    <a class="icon-link -size-24-24 -unix" href="/tools#pastebincl" title="Linux Application"></a>
-</div>
-
-<footer class="footer">
-    <div class="container">
-        <div class="footer__container">
-
-            <div class="footer__left">
-                <a href="/">create new paste</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                                <a href="/languages">syntax languages</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/archive">archive</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/faq">faq</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/tools">tools</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/night_mode">night mode</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/doc_api">api</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/doc_scraping_api">scraping api</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/news">news</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/pro" class="pro">pro</a>
-
-                <br>
-                <a href="/doc_privacy_statement">privacy statement</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/doc_cookies_policy">cookies policy</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/doc_terms_of_service">terms of service</a><span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/doc_security_disclosure">security disclosure</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/dmca">dmca</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/report-abuse">report abuse</a> <span class="footer__devider">&nbsp;/&nbsp;</span>
-                <a href="/contact">contact</a>
-
-                <br>
-
-                                
-                <br>
-
-                
-<span class="footer__bottom h_800">
-    By using Pastebin.com you agree to our <a href="/doc_cookies_policy">cookies policy</a> to enhance your experience.
-    <br>
-    Site design &amp; logo &copy; 2026 Pastebin</span>
-            </div>
-
-            <div class="footer__right h_1024">
-                                    <a class="icon-link -size-40-40 -facebook-circle" href="https://facebook.com/pastebin" rel="nofollow" title="Like us on Facebook" target="_blank"></a>
-                    <a class="icon-link -size-40-40 -twitter-circle" href="https://twitter.com/pastebin" rel="nofollow" title="Follow us on Twitter" target="_blank"></a>
-                            </div>
-
-        </div>
+    <div class="service-item">
+      <div class="service-num">01</div>
+      <div class="service-content">
+        <div class="service-name">Radiografia Operativa</div>
+        <p class="service-desc">Auditoria profunda y documento estrategico completo. Tu plano arquitectonico: donde estan las fugas, que herramientas fallan, como se estructura el nuevo sistema. Si decides no construirlo con nosotros, al menos sabes exactamente que tienes roto.</p>
+      </div>
+      <div class="service-badge">250 €</div>
     </div>
+    <div class="service-item">
+      <div class="service-num">02</div>
+      <div class="service-content">
+        <div class="service-name">Setup Logistica Express</div>
+        <p class="service-desc">Intervencion de emergencia sobre el dolor mas agudo. Conectamos Shopify o WooCommerce directamente con tu proveedor de transporte. Las etiquetas se generan solas. Cero direcciones copiadas a mano. Cero paquetes perdidos.</p>
+      </div>
+      <div class="service-badge">950 €</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">03</div>
+      <div class="service-content">
+        <div class="service-name">Full Stack — Cerebro Archon</div>
+        <p class="service-desc">La joya de la corona. Sustitucion total del trabajo administrativo por infraestructura de IA y No-Code. Pasarela de pagos blindada, inventario maestro en base de datos independiente, logistica automatizada de principio a fin. Operativa 24/7 sin intervencion humana.</p>
+      </div>
+      <div class="service-badge">2.500 €</div>
+    </div>
+    <div class="service-item">
+      <div class="service-num">04</div>
+      <div class="service-content">
+        <div class="service-name">Mantenimiento y Calidad Total</div>
+        <p class="service-desc">Supervision constante de servidores, actualizacion de APIs, soporte tecnico prioritario y ajustes en los flujos de automatizacion. El Cerebro Digital nunca se apaga. Tu ingreso recurrente, nuestro seguro de vida mutuo.</p>
+      </div>
+      <div class="service-badge recurring">350 €/mes</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AUDITORIA CTA -->
+<section id="auditoria" class="audit-section">
+  <div class="audit-inner">
+    <div class="audit-timer">33'</div>
+    <div class="audit-label">Auditoria Operativa Gratuita</div>
+    <h2 class="audit-title reveal">¿Quieres saber exactamente<br>por donde se desangra<br><span style="color:var(--green)">tu negocio?</span></h2>
+    <p class="audit-desc reveal">
+      No es una charla de bar. Es una diseccion clinica donde te demostramos con datos reales cuanto te esta costando cada proceso manual que tienes activo hoy. Sin compromiso. Sin humo. Solo numeros.
+    </p>
+    <form class="audit-form reveal" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Nombre y apellidos" required>
+      <input type="email" placeholder="Email de contacto" required>
+      <input type="text" placeholder="Nombre de tu tienda o negocio" required>
+      <select required>
+        <option value="" disabled selected>Plataforma que usas</option>
+        <option>Shopify</option>
+        <option>WooCommerce</option>
+        <option>PrestaShop</option>
+        <option>Otra plataforma</option>
+        <option>No tengo tienda online aun</option>
+      </select>
+      <button type="submit" class="audit-submit">Reservar mi slot de auditoria</button>
+    </form>
+    <p class="audit-disclaimer reveal">33 minutos. Completamente gratuito. Sin presion comercial posterior.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Archon <span>Consultancies</span></div>
+    <div class="footer-tagline">Precision. Control. Arquitectura.</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#problema">El Problema</a></li>
+    <li><a href="#arquitectura">Arquitectura</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#auditoria">Auditoria</a></li>
+    <li><a href="https://github.com/palcocerhurtado-tech/quantbot" target="_blank">GitHub</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Archon Consultancies — Zaragoza</div>
 </footer>
-    
 
-
-    
-<div class="popup-container">
-
-                <div class="popup-box -cookies" data-name="l2c_1">
-            We use cookies for various purposes including analytics. By continuing to use Pastebin, you agree to our use of cookies as described in the <a href="/doc_cookies_policy">Cookies Policy</a>.            &nbsp;<span class="cookie-button js-close-cookies">OK, I Understand</span>
-        </div>
-    
-                <div class="popup-box -pro" data-name="l2c_2_pg">
-            <div class="pro-promo-img">
-                <a href="/signup" aria-label="Sign Up">
-                    <img src="/themes/pastebin/img/hello.webp" alt=""/>
-                </a>
-            </div>
-            <div class="pro-promo-text">
-                Not a member of Pastebin yet?<br/>
-                <a href="/signup"><b>Sign Up</b></a>, it unlocks many cool features!            </div>
-            <div class="close js-close-pro-guest" title="Close Me">&nbsp;</div>
-        </div>
-    
-    
-    
-</div>
-    
-
-<span class="cd-top"></span>
-
-<script src="/assets/9ce1885/jquery.min.js"></script>
-<script src="/assets/f04f76b8/yii.js"></script>
-<script src="/assets/d65ff796/dist/bootstrap-tagsinput.js"></script>
 <script>
-    const POST_EXPIRATION_NEVER = 'N';
-    const POST_EXPIRATION_BURN = 'B';
-    const POST_STATUS_PUBLIC = '0';
-    const POST_STATUS_UNLISTED = '1';
-</script>
-<script src="/themes/pastebin/js/vendors.bundle.js?30d6ece6979ee0cf5531"></script>
-<script src="/themes/pastebin/js/app.bundle.js?30d6ece6979ee0cf5531"></script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+document.querySelectorAll('a,button,input,select').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.transform = 'translate(-50%,-50%) scale(1.8)';
+    ring.style.borderColor = '#39FF14';
+    ring.style.opacity = '1';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.opacity = '0.5';
+  });
+});
 
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, {threshold: 0.1});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// FORM
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.audit-submit');
+  btn.textContent = 'Solicitud recibida. Contactamos en 24h.';
+  btn.style.background = 'transparent';
+  btn.style.border = '1px solid #39FF14';
+  btn.style.color = '#39FF14';
+}
+</script>
 </body>
 </html>
