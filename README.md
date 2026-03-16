@@ -1,60 +1,57 @@
-# QuantBot
+# ARCHON CONSULTANCIES
 
-> El mercado no premia el esfuerzo. Premia la precision.
-> Archon Consultancies
-
----
-
-## Que es
-
-Sistema de trading algoritmico de codigo abierto.
-Elimina la variable humana de la ejecucion financiera.
+> El sistema que se retroalimenta. La vigilancia que no duerme. El ciclo que no se interrumpe.
 
 ---
 
-## Stack
+## Que somos
 
-- yfinance + NewsAPI: datos de mercado y noticias reales
-- XGBoost: modelo predictivo de direccion del precio
-- Kelly Criterion: sizing optimo de posicion
-- Alpaca API: paper trading y ejecucion real
-- schedule: loop automatico cada hora
+Archon Consultancies es una consultoria de infraestructuras algoritmicas para e-commerce.
+No vendemos software suelto. Ensamblamos sistemas que eliminan la variable humana de los procesos operativos criticos.
 
----
-
-## Parametros de control
-
-- Exposicion maxima por posicion: 5%
-- Drawdown maximo: 10%
-- Confianza minima para ejecutar: 60%
-- Capital inicial simulado: 10.000 USD
+Precision. Control. Arquitectura.
 
 ---
 
-## Instalacion
+## El problema que resolvemos
+
+El 80% de las tiendas online gestionan su logistica como en 2010.
+Excels rotos. Datos de stock en el panel vulnerable de la web.
+Pedidos copiados a mano. Cada proceso manual es una fuga de capital activa.
+
+---
+
+## La Arquitectura Archon
+
+- La Caja Fuerte (Airtable): inventario blindado en base de datos relacional externa
+- Las Arterias (Make / n8n): tienda, banco y almacen conectados en milisegundos
+- La Aduana de Seguridad (Stripe): ningun pedido avanza sin confirmacion de pago
+- El Supervisor (IA): auditoria de direcciones y deteccion de anomalias automatica
+
+---
+
+## Servicios
+
+- Auditoria Operativa gratuita de 33 minutos
+- Radiografia Operativa (Roadmap): 250 euros
+- Setup Logistica Express: 950 euros
+- Full Stack Cerebro Archon: 2.500 euros
+- Mantenimiento y Calidad Total: 350 euros / mes
+
+---
+
+## QuantBot - Proyecto Open Source
+
+Bot de trading algoritmico construido sobre la filosofia Archon.
+Elimina la variable humana del proceso de ejecucion financiera.
 
 git clone https://github.com/palcocerhurtado-tech/quantbot.git
 cd quantbot
 pip3 install -r requirements.txt
-python3 setup_project.py
 python3 main.py
 
 ---
 
-## Advertencia
-
-Opera en paper trading por defecto.
-Ningun sistema garantiza rentabilidad.
-Audita el codigo antes de conectar capital real.
-
----
-
-## Filosofia Archon
-
-El trabajo duro no sirve de nada si el sistema esta roto.
-Reemplazamos la fragilidad humana por infraestructuras algoritmicas que no fallan.
-
----
-
-Pablo Alcocer — Fundador Archon Consultancies
+Pablo Alcocer - Fundador Archon Consultancies
+Zaragoza, Espana
 github.com/palcocerhurtado-tech/quantbot
