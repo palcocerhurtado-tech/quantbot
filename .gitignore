@@ -1,0 +1,6 @@
+.env
+logs/*.log
+logs/trades.jsonl
+models/saved/
+__pycache__/
+.DS_Store
