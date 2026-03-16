@@ -1,0 +1,54 @@
+2026-03-16 10:07:54,395 WARNING [market] Sin datos para AAPL
+2026-03-16 10:07:55,028 ERROR [market] Error precio AAPL: 'currentTradingPeriod'
+2026-03-16 10:09:29,706 INFO [market] AAPL: 10 filas descargadas
+2026-03-16 10:11:29,394 INFO [market] AAPL: 60 filas descargadas
+2026-03-16 10:13:24,529 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:14:47,237 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:18:30,433 INFO [market] AAPL: 730 filas descargadas
+2026-03-16 10:18:31,282 INFO [market] MSFT: 730 filas descargadas
+2026-03-16 10:18:32,118 INFO [market] NVDA: 730 filas descargadas
+2026-03-16 10:18:32,986 INFO [market] SPY: 730 filas descargadas
+2026-03-16 10:32:34,043 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:32:34,454 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:32:34,848 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:32:35,317 INFO [market] SPY: 180 filas descargadas
+2026-03-16 10:32:35,722 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:32:36,082 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:32:36,436 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:32:36,877 INFO [market] SPY: 180 filas descargadas
+2026-03-16 10:51:06,706 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:51:06,950 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:51:07,241 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:51:07,698 INFO [market] SPY: 180 filas descargadas
+2026-03-16 10:51:07,982 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:51:08,390 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:51:09,373 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:51:10,011 INFO [market] SPY: 180 filas descargadas
+2026-03-16 10:53:26,652 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:53:27,157 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:53:27,679 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:53:28,203 INFO [market] SPY: 180 filas descargadas
+2026-03-16 10:53:28,547 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 10:53:29,077 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 10:53:29,576 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 10:53:30,049 INFO [market] SPY: 180 filas descargadas
+2026-03-16 11:10:47,968 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 11:10:48,451 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 11:10:48,973 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 11:10:49,506 INFO [market] SPY: 180 filas descargadas
+2026-03-16 11:10:49,942 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 11:10:50,501 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 11:10:51,056 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 11:10:51,577 INFO [market] SPY: 180 filas descargadas
+2026-03-16 12:11:59,698 ERROR [market] Error descargando AAPL: 'NoneType' object is not subscriptable
+2026-03-16 12:12:00,343 ERROR [market] Error descargando MSFT: 'NoneType' object is not subscriptable
+2026-03-16 12:12:00,555 ERROR [market] Error descargando NVDA: 'NoneType' object is not subscriptable
+2026-03-16 12:12:00,573 ERROR [market] Error descargando SPY: 'NoneType' object is not subscriptable
+2026-03-16 13:12:55,295 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 13:12:55,913 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 13:12:56,430 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 13:12:57,029 INFO [market] SPY: 180 filas descargadas
+2026-03-16 14:13:23,951 INFO [market] AAPL: 180 filas descargadas
+2026-03-16 14:13:24,882 INFO [market] MSFT: 180 filas descargadas
+2026-03-16 14:13:25,423 INFO [market] NVDA: 180 filas descargadas
+2026-03-16 14:13:26,173 INFO [market] SPY: 180 filas descargadas

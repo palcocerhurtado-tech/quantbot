@@ -1,0 +1,102 @@
+2026-03-16 10:11:28,730 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:11:28,731 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:13:24,530 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:13:24,531 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:14:47,238 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:14:47,238 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:18:30,434 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:18:30,434 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:18:31,282 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:18:31,282 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 10:18:32,118 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:18:32,119 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 10:18:32,986 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:18:32,986 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 10:32:34,044 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:34,044 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:32:34,454 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:34,455 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 10:32:34,848 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:34,849 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 10:32:35,317 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:35,318 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 10:32:35,722 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:35,722 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:32:36,083 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:36,083 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 10:32:36,436 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:36,436 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 10:32:36,877 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:32:36,877 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 10:51:06,706 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:06,707 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:51:06,950 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:06,950 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 10:51:07,241 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:07,242 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 10:51:07,698 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:07,699 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 10:51:07,983 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:07,983 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 10:51:08,390 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:08,391 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 10:51:09,373 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:09,373 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 10:51:10,011 WARNING [news] Sin NEWS_API_KEY, usando titulares de prueba
+2026-03-16 10:51:10,011 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 10:53:26,875 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 10:53:26,877 INFO [news] AAPL sentimiento noticias: compound=0.000
+2026-03-16 10:53:27,340 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 10:53:27,341 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 10:53:27,877 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 10:53:27,879 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 10:53:28,402 INFO [news] SPY: 9 titulares descargados
+2026-03-16 10:53:28,403 INFO [news] SPY sentimiento noticias: compound=0.110
+2026-03-16 10:53:28,719 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 10:53:28,720 INFO [news] AAPL sentimiento noticias: compound=0.000
+2026-03-16 10:53:29,264 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 10:53:29,267 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 10:53:29,768 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 10:53:29,771 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 10:53:30,289 INFO [news] SPY: 9 titulares descargados
+2026-03-16 10:53:30,291 INFO [news] SPY sentimiento noticias: compound=0.110
+2026-03-16 11:10:48,200 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 11:10:48,203 INFO [news] AAPL sentimiento noticias: compound=0.000
+2026-03-16 11:10:48,643 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 11:10:48,644 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 11:10:49,201 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 11:10:49,203 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 11:10:49,723 INFO [news] SPY: 10 titulares descargados
+2026-03-16 11:10:49,725 INFO [news] SPY sentimiento noticias: compound=0.069
+2026-03-16 11:10:50,115 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 11:10:50,116 INFO [news] AAPL sentimiento noticias: compound=0.000
+2026-03-16 11:10:50,679 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 11:10:50,681 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 11:10:51,227 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 11:10:51,230 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 11:10:51,743 INFO [news] SPY: 10 titulares descargados
+2026-03-16 11:10:51,745 INFO [news] SPY sentimiento noticias: compound=0.069
+2026-03-16 12:12:00,250 ERROR [news] Error noticias AAPL: HTTPSConnectionPool(host='newsapi.org', port=443): Max retries exceeded with url: /v2/everything?q=AAPL&language=en&sortBy=publishedAt&pageSize=10&apiKey=5a031b6cdede49cd914169ca6aacd547 (Caused by NameResolutionError("HTTPSConnection(host='newsapi.org', port=443): Failed to resolve 'newsapi.org' ([Errno 8] nodename nor servname provided, or not known)"))
+2026-03-16 12:12:00,253 INFO [news] AAPL sentimiento noticias: compound=0.190
+2026-03-16 12:12:00,365 ERROR [news] Error noticias MSFT: HTTPSConnectionPool(host='newsapi.org', port=443): Max retries exceeded with url: /v2/everything?q=MSFT&language=en&sortBy=publishedAt&pageSize=10&apiKey=5a031b6cdede49cd914169ca6aacd547 (Caused by NameResolutionError("HTTPSConnection(host='newsapi.org', port=443): Failed to resolve 'newsapi.org' ([Errno 8] nodename nor servname provided, or not known)"))
+2026-03-16 12:12:00,540 INFO [news] MSFT sentimiento noticias: compound=0.190
+2026-03-16 12:12:00,564 ERROR [news] Error noticias NVDA: HTTPSConnectionPool(host='newsapi.org', port=443): Max retries exceeded with url: /v2/everything?q=NVDA&language=en&sortBy=publishedAt&pageSize=10&apiKey=5a031b6cdede49cd914169ca6aacd547 (Caused by NameResolutionError("HTTPSConnection(host='newsapi.org', port=443): Failed to resolve 'newsapi.org' ([Errno 8] nodename nor servname provided, or not known)"))
+2026-03-16 12:12:00,567 INFO [news] NVDA sentimiento noticias: compound=0.190
+2026-03-16 12:12:00,576 ERROR [news] Error noticias SPY: HTTPSConnectionPool(host='newsapi.org', port=443): Max retries exceeded with url: /v2/everything?q=SPY&language=en&sortBy=publishedAt&pageSize=10&apiKey=5a031b6cdede49cd914169ca6aacd547 (Caused by NameResolutionError("HTTPSConnection(host='newsapi.org', port=443): Failed to resolve 'newsapi.org' ([Errno 8] nodename nor servname provided, or not known)"))
+2026-03-16 12:12:00,787 INFO [news] SPY sentimiento noticias: compound=0.190
+2026-03-16 13:12:55,566 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 13:12:55,570 INFO [news] AAPL sentimiento noticias: compound=0.064
+2026-03-16 13:12:56,132 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 13:12:56,134 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 13:12:56,636 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 13:12:56,639 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 13:12:57,317 INFO [news] SPY: 10 titulares descargados
+2026-03-16 13:12:57,320 INFO [news] SPY sentimiento noticias: compound=0.003
+2026-03-16 14:13:24,295 INFO [news] AAPL: 10 titulares descargados
+2026-03-16 14:13:24,301 INFO [news] AAPL sentimiento noticias: compound=0.064
+2026-03-16 14:13:25,104 INFO [news] MSFT: 10 titulares descargados
+2026-03-16 14:13:25,107 INFO [news] MSFT sentimiento noticias: compound=0.124
+2026-03-16 14:13:25,624 INFO [news] NVDA: 10 titulares descargados
+2026-03-16 14:13:25,630 INFO [news] NVDA sentimiento noticias: compound=-0.040
+2026-03-16 14:13:26,386 INFO [news] SPY: 10 titulares descargados
+2026-03-16 14:13:26,391 INFO [news] SPY sentimiento noticias: compound=0.075
