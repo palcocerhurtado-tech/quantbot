@@ -4,12 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="MD0MtiYe9We5JQqG_ZiAK8qcA6-PZyUIP-LVGOFcgAM">
-<meta name="description" content="Archon Consultancies — Automatizacion e-commerce Zaragoza. Eliminamos procesos manuales con IA. Auditoria gratuita 33 minutos.">
+<meta name="description" content="Archon Consultancies diseña automatizacion para e-commerce y operaciones digitales. Auditoria gratuita de 33 minutos y arquitectura pensada para reducir trabajo manual.">
 <meta name="robots" content="index, follow">
+<link rel="canonical" href="https://palcocerhurtado-tech.github.io/quantbot/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://palcocerhurtado-tech.github.io/quantbot/">
 <meta property="og:title" content="Archon Consultancies — Precision. Control. Arquitectura.">
-<meta property="og:description" content="Tu e-commerce se desangra. Nosotros lo blindamos.">
+<meta property="og:description" content="Automatizacion e-commerce y arquitectura operativa para reducir procesos manuales.">
+<meta property="og:image" content="https://palcocerhurtado-tech.github.io/quantbot/archon_logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Archon Consultancies — Precision. Control. Arquitectura.">
+<meta name="twitter:description" content="Automatizacion e-commerce y arquitectura operativa para reducir procesos manuales.">
+<meta name="twitter:image" content="https://palcocerhurtado-tech.github.io/quantbot/archon_logo.png">
+<meta name="theme-color" content="#0e0e0e">
 <title>Archon Consultancies — Precision. Control. Arquitectura.</title>
-<link rel="icon" type="image/png" href="recurso14.png">
+<link rel="icon" type="image/png" href="archon_logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Archon Consultancies",
+  "url": "https://palcocerhurtado-tech.github.io/quantbot/",
+  "logo": "https://palcocerhurtado-tech.github.io/quantbot/archon_logo.png",
+  "description": "Consultoria de automatizacion para e-commerce y operaciones digitales.",
+  "areaServed": "ES",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Zaragoza",
+    "addressCountry": "ES"
+  }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -37,6 +62,11 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .cta{position:relative;z-index:10;display:inline-flex;align-items:center;background:var(--green);color:#050505;font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:18px 40px;text-decoration:none;font-weight:bold;margin-top:20px;transition:all 0.3s}
 .cta:hover{box-shadow:0 0 40px rgba(57,255,20,0.4);transform:translateY(-2px)}
 .counter{font-family:'Cinzel',serif;font-size:11px;color:#1a7a09;margin-top:16px}
+.hero-panel{position:relative;z-index:10;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(860px,100%);margin-top:42px}
+.livecard{padding:20px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));border:1px solid rgba(57,255,20,0.12);text-align:left;backdrop-filter:blur(10px);box-shadow:0 18px 60px rgba(0,0,0,0.28)}
+.livecard .k{display:block;font-size:10px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-bottom:12px}
+.livecard .v{display:block;font-family:'Cinzel Decorative',serif;font-size:34px;line-height:1;color:var(--white)}
+.livecard .m{display:block;font-size:12px;color:#9f9f9f;line-height:1.7;margin-top:12px}
 .sec{padding:100px 60px;max-width:1200px;margin:0 auto}
 .lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;color:var(--green);text-transform:uppercase;margin-bottom:20px}
 .sec h2{font-family:'Cinzel Decorative',serif;font-size:clamp(40px,6vw,80px);line-height:1;margin-bottom:40px}
@@ -80,6 +110,7 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .asub{background:var(--green);color:#050505;font-family:'Cinzel',serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;padding:18px;border:none;font-weight:bold;cursor:pointer;transition:all 0.3s;width:100%}
 .asub:hover{box-shadow:0 0 60px rgba(57,255,20,0.5)}
 .disc{font-size:11px;color:rgba(255,255,255,0.2);margin-top:20px;letter-spacing:1px}
+.formnote{font-size:12px;color:#ccc;line-height:1.7;margin-top:4px}
 .aboutsec{padding:100px 60px;max-width:1200px;margin:0 auto}
 .aboutgrid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:40px}
 .aboutstat{border-left:1px solid rgba(57,255,20,0.2);padding-left:60px}
@@ -94,6 +125,23 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .blogtitle{font-family:'Cinzel Decorative',serif;font-size:28px;margin-bottom:16px;line-height:1.1;color:var(--white)}
 .blogtext{font-size:13px;color:#ccc;line-height:1.8;margin-bottom:24px}
 .bloglink{font-family:'Cinzel',serif;font-size:11px;color:var(--green);letter-spacing:2px}
+.calcsec{padding:100px 60px;max-width:1200px;margin:0 auto}
+.calcgrid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:28px;align-items:start}
+.calcbox,.calcresult{border:1px solid rgba(57,255,20,0.12);background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));padding:34px}
+.calcbox h3,.calcresult h3{font-family:'Cinzel Decorative',serif;font-size:30px;line-height:1.1;margin-bottom:16px}
+.calcintro{font-size:14px;color:#c7c7c7;line-height:1.9;margin-bottom:28px}
+.calccontrols{display:grid;gap:24px}
+.calcfield label{display:flex;justify-content:space-between;gap:16px;font-size:12px;color:#d3d3d3;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.calcfield output{color:var(--green)}
+.calcfield input[type="range"]{width:100%;accent-color:var(--green)}
+.calcfield p{font-size:12px;color:#8d8d8d;line-height:1.7;margin-top:10px}
+.calcresult .eyebrow{display:block;font-size:10px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-bottom:12px}
+.calcvalue{font-family:'Cinzel Decorative',serif;font-size:clamp(54px,7vw,88px);line-height:0.95;color:var(--green);text-shadow:0 0 35px rgba(57,255,20,0.16)}
+.calcsub{font-size:14px;color:#d6d6d6;line-height:1.8;margin:22px 0}
+.calcchips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{padding:9px 14px;border:1px solid rgba(57,255,20,0.18);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#d0d0d0}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justify-content:space-between;align-items:center}
 .fl{font-family:'Cinzel Decorative',serif;font-size:20px;letter-spacing:4px}
 .fl span{color:var(--green)}
@@ -102,7 +150,7 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 .flinks a{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:#ccc;text-decoration:none;text-transform:uppercase;transition:color 0.3s}
 .flinks a:hover{color:var(--green)}
 .fc{font-family:'Cinzel',serif;font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:2px}
-@media(max-width:768px){nav{padding:16px 24px}.nav-links{display:none}.sec{padding:60px 24px}.pgrid{grid-template-columns:1fr}.asec{padding:60px 24px}.agrid{grid-template-columns:1fr}.ssec{padding:60px 24px}.si{grid-template-columns:50px 1fr}.sb{display:none}.audsec{padding:80px 24px}.aboutsec{padding:60px 24px}.aboutgrid{grid-template-columns:1fr}.blogsec{padding:60px 24px}.blogrid{grid-template-columns:1fr}footer{flex-direction:column;gap:30px;padding:40px 24px;text-align:center}.flinks{flex-wrap:wrap;justify-content:center}}
+@media(max-width:768px){nav{padding:16px 24px}.nav-links{display:none}.hero-panel{grid-template-columns:1fr}.sec{padding:60px 24px}.pgrid{grid-template-columns:1fr}.asec{padding:60px 24px}.agrid{grid-template-columns:1fr}.ssec{padding:60px 24px}.si{grid-template-columns:50px 1fr}.sb{display:none}.calcsec{padding:60px 24px}.calcgrid{grid-template-columns:1fr}.audsec{padding:80px 24px}.aboutsec{padding:60px 24px}.aboutgrid{grid-template-columns:1fr}.blogsec{padding:60px 24px}.blogrid{grid-template-columns:1fr}footer{flex-direction:column;gap:30px;padding:40px 24px;text-align:center}.flinks{flex-wrap:wrap;justify-content:center}}
 </style>
 </head>
 <body>
@@ -124,6 +172,11 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <p class="hero-sub">Cada pedido copiado a mano. Cada Excel desincronizado. No es ineficiencia. Es <strong>hemorragia operativa en tiempo real</strong>. Tenemos el bisturi.</p>
 <a href="#auditoria" class="cta" onclick="event.preventDefault();document.getElementById('auditoria').scrollIntoView({behavior:'smooth'})">Auditoria gratuita — 33 minutos</a>
 <p class="counter">[ Sin coste. Sin humo. Solo datos. ]</p>
+<div class="hero-panel reveal">
+<div class="livecard"><span class="k">Latencia operativa</span><span class="v" id="latencyValue">018 ms</span><span class="m">Cuanto tarda tu operativa en reaccionar cuando el pedido ya ha entrado.</span></div>
+<div class="livecard"><span class="k">Horas recuperables</span><span class="v" id="hoursValue">32 h</span><span class="m">Tiempo mensual que una infraestructura bien diseñada devuelve al equipo.</span></div>
+<div class="livecard"><span class="k">Estado del sistema</span><span class="v" id="stateValue">ACTIVO</span><span class="m">Arquitectura viva, vigilada y pensada para no depender del azar humano.</span></div>
+</div>
 </section>
 <section id="problema" class="sec">
 <p class="lbl">Diagnostico</p>
@@ -155,6 +208,43 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <div class="si"><div class="snum">02</div><div><div class="sn">Setup Logistica Express</div><p class="sd">Conectamos Shopify o WooCommerce con tu proveedor de transporte. Etiquetas generadas solas.</p></div><div class="sb">950 euros</div></div>
 <div class="si"><div class="snum">03</div><div><div class="sn">Full Stack Cerebro Archon</div><p class="sd">Sustitucion total del trabajo administrativo por IA y No-Code. Operativa 24/7.</p></div><div class="sb">2.500 euros</div></div>
 <div class="si"><div class="snum">04</div><div><div class="sn">Mantenimiento y Calidad Total</div><p class="sd">Supervision constante, actualizacion de APIs, soporte prioritario. El Cerebro Digital nunca se apaga.</p></div><div class="sb r">350 euros/mes</div></div>
+</div>
+</section>
+<section class="calcsec">
+<p class="lbl">Simulador</p>
+<h2 style="font-family:'Cinzel Decorative',serif;font-size:clamp(40px,6vw,80px);line-height:1;margin-bottom:40px">Cuanto dinero pierde tu operativa <span style="color:var(--green)">cada año</span></h2>
+<div class="calcgrid">
+<div class="calcbox reveal">
+<h3>Radiografia express</h3>
+<p class="calcintro">Mueve estos tres parametros y te damos una estimacion instantanea del coste anual de seguir operando con tareas manuales.</p>
+<div class="calccontrols">
+<div class="calcfield">
+<label for="ordersRange"><span>Pedidos al mes</span><output id="ordersOutput">180</output></label>
+<input id="ordersRange" type="range" min="40" max="1500" step="10" value="180">
+<p>Cuantos pedidos procesa tu negocio en un mes normal.</p>
+</div>
+<div class="calcfield">
+<label for="minutesRange"><span>Minutos manuales por pedido</span><output id="minutesOutput">6</output></label>
+<input id="minutesRange" type="range" min="1" max="20" step="1" value="6">
+<p>Tiempo que se consume entre copiar datos, revisar stock, confirmar pagos y emitir etiquetas.</p>
+</div>
+<div class="calcfield">
+<label for="costRange"><span>Coste por hora</span><output id="costOutput">18 EUR</output></label>
+<input id="costRange" type="range" min="10" max="60" step="1" value="18">
+<p>Coste aproximado de la persona o del tiempo directivo absorbido por esa operativa.</p>
+</div>
+</div>
+</div>
+<div class="calcresult reveal">
+<span class="eyebrow">Impacto estimado</span>
+<div class="calcvalue" id="annualLeakValue">3.888 EUR</div>
+<p class="calcsub" id="calcNarrative">Eso equivale a una fuga silenciosa de capital que se repite mes a mes aunque tu facturacion siga creciendo.</p>
+<div class="calcchips">
+<span class="chip" id="monthlyLeakChip">324 EUR / mes</span>
+<span class="chip" id="hoursLeakChip">18 h perdidas / mes</span>
+<span class="chip" id="urgencyChip">Urgencia moderada</span>
+</div>
+</div>
 </div>
 </section>
 <section id="about" class="aboutsec">
@@ -198,20 +288,21 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 </div>
 </div>
 </section>
-<section <section id="auditoria" class="audsec">
+<section id="auditoria" class="audsec">
 <div class="audin">
 <div class="audt">33</div>
 <div class="audl">Auditoria Operativa Gratuita</div>
 <h2 class="audh">Quieres saber por donde se desangra <span style="color:var(--green)">tu negocio?</span></h2>
-<p class="audd">No es una charla de bar. Es una diseccion clinica donde te demostramos cuanto te esta costando cada proceso manual activo. Sin compromiso. Sin humo. Solo numeros.</p>
+<p class="audd">No es una charla de bar. Es una diseccion clinica donde te mostramos cuanto te cuesta cada proceso manual activo. Sin compromiso. Sin humo. Solo numeros.</p>
 <form class="aform" onsubmit="handleSubmit(event)">
-<input type="text" placeholder="Nombre y apellidos" required>
-<input type="email" placeholder="Email de contacto" required>
-<input type="text" placeholder="Nombre de tu tienda o negocio" required>
-<select required><option value="" disabled selected>Plataforma que usas</option><option>Shopify</option><option>WooCommerce</option><option>PrestaShop</option><option>Otra plataforma</option><option>No tengo tienda online aun</option></select>
-<button type="submit" class="asub">Reservar mi slot de auditoria</button>
+<input type="text" name="name" id="name" placeholder="Nombre y apellidos" autocomplete="name" required>
+<input type="email" name="email" id="email" placeholder="Email de contacto" autocomplete="email" required>
+<input type="text" name="business" id="business" placeholder="Nombre de tu tienda o negocio" autocomplete="organization" required>
+<select name="platform" id="platform" required><option value="" disabled selected>Plataforma que usas</option><option>Shopify</option><option>WooCommerce</option><option>PrestaShop</option><option>Otra plataforma</option><option>No tengo tienda online aun</option></select>
+<button type="submit" class="asub">Preparar solicitud</button>
 </form>
-<p class="disc">33 minutos. Completamente gratuito. Sin presion comercial posterior.</p>
+<p class="formnote">Al pulsar el botón se abre un borrador de correo con tus datos y el resumen de la auditoría.</p>
+<p class="disc">33 minutos. Completamente gratuito. Sin presión comercial posterior.</p>
 </div>
 </section>
 <footer>
@@ -220,9 +311,87 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <div class="fc">2026 Archon Consultancies — Zaragoza</div>
 </footer>
 <script>
-function handleSubmit(e){e.preventDefault();var b=e.target.querySelector('.asub');b.textContent='Solicitud recibida. Contactamos en 24h.';b.style.background='transparent';b.style.border='1px solid #39FF14';b.style.color='#39FF14';}
+function handleSubmit(e){
+  e.preventDefault();
+  var form = e.target;
+  var data = new FormData(form);
+  var name = data.get('name') || 'Nombre';
+  var email = data.get('email') || 'Email';
+  var business = data.get('business') || 'Negocio';
+  var platform = data.get('platform') || 'Plataforma no indicada';
+  var subject = encodeURIComponent('Auditoria Archon - ' + business);
+  var body = encodeURIComponent(
+    'Nombre: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'Negocio: ' + business + '\n' +
+    'Plataforma: ' + platform + '\n\n' +
+    'Quiero revisar mi operativa y recibir la propuesta de auditoria.'
+  );
+  var button = form.querySelector('.asub');
+  button.textContent = 'Abriendo borrador de correo...';
+  button.style.background = 'transparent';
+  button.style.border = '1px solid #39FF14';
+  button.style.color = '#39FF14';
+  window.location.href = 'mailto:auditoria@archonconsultancies.com?subject=' + subject + '&body=' + body;
+}
 </script>
 <script>
+const liveStates = ['ACTIVO', 'VIGILANDO', 'AUDITANDO', 'SIN FRICCION'];
+let liveTick = 0;
+
+function formatEuros(value){
+  return new Intl.NumberFormat('es-ES', {maximumFractionDigits: 0}).format(Math.round(value)) + ' EUR';
+}
+
+function updateHeroPanel(){
+  const latency = 12 + (liveTick % 5) * 3;
+  const hours = 24 + (liveTick % 4) * 7;
+  document.getElementById('latencyValue').textContent = String(latency).padStart(3, '0') + ' ms';
+  document.getElementById('hoursValue').textContent = hours + ' h';
+  document.getElementById('stateValue').textContent = liveStates[liveTick % liveStates.length];
+  liveTick += 1;
+}
+
+function updateLeakCalculator(){
+  const orders = Number(document.getElementById('ordersRange').value);
+  const minutes = Number(document.getElementById('minutesRange').value);
+  const hourlyCost = Number(document.getElementById('costRange').value);
+  const monthlyHours = (orders * minutes) / 60;
+  const monthlyLeak = monthlyHours * hourlyCost;
+  const annualLeak = monthlyLeak * 12;
+
+  document.getElementById('ordersOutput').textContent = orders;
+  document.getElementById('minutesOutput').textContent = minutes;
+  document.getElementById('costOutput').textContent = hourlyCost + ' EUR';
+  document.getElementById('annualLeakValue').textContent = formatEuros(annualLeak);
+  document.getElementById('monthlyLeakChip').textContent = formatEuros(monthlyLeak) + ' / mes';
+  document.getElementById('hoursLeakChip').textContent = Math.round(monthlyHours) + ' h perdidas / mes';
+
+  let urgency = 'Urgencia moderada';
+  if (annualLeak >= 18000) urgency = 'Urgencia critica';
+  else if (annualLeak >= 9000) urgency = 'Urgencia alta';
+
+  document.getElementById('urgencyChip').textContent = urgency;
+  document.getElementById('calcNarrative').textContent =
+    'Con estos parametros, tu equipo pierde aproximadamente ' +
+    Math.round(monthlyHours) +
+    ' horas al mes en procesos manuales que una arquitectura operativa bien diseñada puede absorber.';
+}
+
+function initReveal(){
+  const nodes = document.querySelectorAll('.hero-panel,.pc,.ac,.si,.calcbox,.calcresult,.aboutstat,.blogcard,.audin');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('reveal', 'visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.18});
+
+  nodes.forEach((node) => observer.observe(node));
+}
+
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', function(e) {
     e.preventDefault();
@@ -230,6 +399,15 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if(target) target.scrollIntoView({behavior:'smooth'});
   });
 });
+
+['ordersRange','minutesRange','costRange'].forEach((id) => {
+  document.getElementById(id).addEventListener('input', updateLeakCalculator);
+});
+
+updateHeroPanel();
+updateLeakCalculator();
+initReveal();
+setInterval(updateHeroPanel, 2400);
 </script>
 </body>
 </html>

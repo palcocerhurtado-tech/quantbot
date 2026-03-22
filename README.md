@@ -1,57 +1,52 @@
 # ARCHON CONSULTANCIES
 
-> El sistema que se retroalimenta. La vigilancia que no duerme. El ciclo que no se interrumpe.
+> Precision. Control. Arquitectura.
 
----
+## Estructura Del Proyecto
 
-## Que somos
+Este repositorio mezcla dos piezas distintas:
 
-Archon Consultancies es una consultoria de infraestructuras algoritmicas para e-commerce.
-No vendemos software suelto. Ensamblamos sistemas que eliminan la variable humana de los procesos operativos criticos.
+`index.html`
+: Landing principal y canónica de Archon Consultancies.
 
-Precision. Control. Arquitectura.
+`archon.html`
+: Variante experimental de la misma marca. No es la página principal.
 
----
+`quantbot/`
+: Copia del proyecto QuantBot con su propia estructura de ejecución.
 
-## El problema que resolvemos
+## Archon Consultancies
 
-El 80% de las tiendas online gestionan su logistica como en 2010.
-Excels rotos. Datos de stock en el panel vulnerable de la web.
-Pedidos copiados a mano. Cada proceso manual es una fuga de capital activa.
+Archon es una consultoria de infraestructuras algoritmicas para e-commerce. El objetivo es reducir trabajo manual en operaciones criticas y convertir procesos repetitivos en flujos automatizados, auditables y medibles.
 
----
+## Arquitectura Archon
 
-## La Arquitectura Archon
-
-- La Caja Fuerte (Airtable): inventario blindado en base de datos relacional externa
-- Las Arterias (Make / n8n): tienda, banco y almacen conectados en milisegundos
-- La Aduana de Seguridad (Stripe): ningun pedido avanza sin confirmacion de pago
-- El Supervisor (IA): auditoria de direcciones y deteccion de anomalias automatica
-
----
+- `La Caja Fuerte` (`Airtable`): inventario blindado en base de datos relacional externa.
+- `Las Arterias` (`Make` / `n8n`): tienda, banco y almacen conectados en milisegundos.
+- `La Aduana de Seguridad` (`Stripe`): ningun pedido avanza sin confirmacion de pago.
+- `El Supervisor` (`IA`): auditoria de direcciones y deteccion automatica de anomalias.
 
 ## Servicios
 
-- Auditoria Operativa gratuita de 33 minutos
-- Radiografia Operativa (Roadmap): 250 euros
-- Setup Logistica Express: 950 euros
-- Full Stack Cerebro Archon: 2.500 euros
-- Mantenimiento y Calidad Total: 350 euros / mes
+- Auditoria Operativa gratuita de 33 minutos.
+- Radiografia Operativa: 250 euros.
+- Setup Logistica Express: 950 euros.
+- Full Stack Cerebro Archon: 2.500 euros.
+- Mantenimiento y Calidad Total: 350 euros / mes.
 
----
+## QuantBot
 
-## QuantBot - Proyecto Open Source
+QuantBot es el proyecto open source de trading algoritmico del repositorio. Usa datos de mercado, features tecnicas, sentimiento y un modelo predictivo para generar señales y ejecutar operaciones en modo controlado.
 
-Bot de trading algoritmico construido sobre la filosofia Archon.
-Elimina la variable humana del proceso de ejecucion financiera.
+## Puesta En Marcha
 
-git clone https://github.com/palcocerhurtado-tech/quantbot.git
-cd quantbot
+```bash
 pip3 install -r requirements.txt
 python3 main.py
+```
 
----
+## Notas
 
-Pablo Alcocer - Fundador Archon Consultancies
-Zaragoza, Espana
-github.com/palcocerhurtado-tech/quantbot
+- La landing principal es `index.html`.
+- `archon.html` queda como variante experimental.
+- El bot depende de claves y variables de entorno para los servicios externos.
