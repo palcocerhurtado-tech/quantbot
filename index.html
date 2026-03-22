@@ -52,19 +52,18 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .ticker-item{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#050505;font-weight:bold}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden}
-.hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.22;transform:scale(1.05)}
-.hero-grid{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(180deg,rgba(5,5,5,0.24),rgba(5,5,5,0.76) 58%,rgba(5,5,5,0.94));background-size:60px 60px,60px 60px,100% 100%}
+.hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0.14;transform:scale(1.02);filter:saturate(0.85)}
+.hero-grid{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.05) 1px,transparent 1px),linear-gradient(180deg,rgba(5,5,5,0.62),rgba(5,5,5,0.82) 48%,rgba(5,5,5,0.96));background-size:60px 60px,60px 60px,100% 100%}
 .hero-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:6px;color:var(--green);text-transform:uppercase;margin-bottom:30px}
-.hero-mark{position:relative;z-index:10;width:min(340px,72vw);margin-bottom:20px;opacity:0.95;filter:drop-shadow(0 18px 40px rgba(0,0,0,0.45))}
 .hero-title{font-family:'Cinzel Decorative',serif;font-size:clamp(60px,10vw,140px);line-height:0.9;margin-bottom:20px}
 .hero-title .g{color:var(--green);display:block}
 .hero-title .w{display:block}
-.hero-sub{font-size:16px;line-height:1.8;color:#ccc;max-width:560px;margin:30px auto}
+.hero-sub{font-size:16px;line-height:1.8;color:#ccc;max-width:760px;margin:30px auto}
 .hero-sub strong{color:var(--white)}
 .cta{position:relative;z-index:10;display:inline-flex;align-items:center;background:var(--green);color:#050505;font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:18px 40px;text-decoration:none;font-weight:bold;margin-top:20px;transition:all 0.3s}
 .cta:hover{box-shadow:0 0 40px rgba(57,255,20,0.4);transform:translateY(-2px)}
-.counter{font-family:'Cinzel',serif;font-size:11px;color:#1a7a09;margin-top:16px}
-.hero-panel{position:relative;z-index:10;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(860px,100%);margin-top:42px}
+.counter{font-family:'Cinzel',serif;font-size:11px;color:rgba(57,255,20,0.62);margin-top:16px}
+.hero-panel{position:relative;z-index:10;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(1120px,100%);margin-top:56px}
 .livecard{padding:20px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));border:1px solid rgba(57,255,20,0.12);text-align:left;backdrop-filter:blur(10px);box-shadow:0 18px 60px rgba(0,0,0,0.28)}
 .livecard .k{display:block;font-size:10px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-bottom:12px}
 .livecard .v{display:block;font-family:'Cinzel Decorative',serif;font-size:34px;line-height:1;color:var(--white)}
@@ -88,8 +87,6 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .an{font-family:'Cinzel Decorative',serif;font-size:32px;margin-bottom:8px}
 .at{font-family:'Cinzel',serif;font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:16px}
 .ad{font-size:13px;color:#ccc;line-height:1.9}
-.showcase{margin-bottom:34px;border:1px solid rgba(57,255,20,0.12);background:rgba(255,255,255,0.02);overflow:hidden}
-.showcase img{display:block;width:100%;height:min(420px,52vw);object-fit:cover;opacity:0.92}
 .ssec{padding:100px 60px;max-width:1200px;margin:0 auto}
 .sl{margin-top:60px}
 .si{display:grid;grid-template-columns:80px 1fr auto;align-items:start;gap:40px;padding:40px 0;border-bottom:1px solid rgba(255,255,255,0.06);transition:border-color 0.3s}
@@ -117,9 +114,6 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-betwe
 .formnote{font-size:12px;color:#ccc;line-height:1.7;margin-top:4px}
 .aboutsec{padding:100px 60px;max-width:1200px;margin:0 auto}
 .aboutgrid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:40px}
-.aboutvisual{margin-bottom:28px;border:1px solid rgba(57,255,20,0.12);background:rgba(255,255,255,0.02);overflow:hidden}
-.aboutvisual img{display:block;width:100%;height:420px;object-fit:cover}
-.aboutmark{width:min(320px,100%);margin-bottom:20px;opacity:0.92}
 .aboutstat{border-left:1px solid rgba(57,255,20,0.2);padding-left:60px}
 .statnum{font-family:'Cinzel Decorative',serif;font-size:60px;color:var(--green);line-height:1}
 .statlbl{font-family:'Cinzel',serif;font-size:11px;color:#ccc;letter-spacing:3px;margin-bottom:30px}
@@ -174,9 +168,8 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 </nav>
 <div class="ticker"><div class="ticker-inner"><span class="ticker-item">Precision</span><span class="ticker-item">*</span><span class="ticker-item">Control</span><span class="ticker-item">*</span><span class="ticker-item">Arquitectura</span><span class="ticker-item">*</span><span class="ticker-item">Operativa 24/7</span><span class="ticker-item">*</span><span class="ticker-item">Cero Errores Manuales</span><span class="ticker-item">*</span><span class="ticker-item">Precision</span><span class="ticker-item">*</span><span class="ticker-item">Control</span><span class="ticker-item">*</span><span class="ticker-item">Arquitectura</span><span class="ticker-item">*</span><span class="ticker-item">Operativa 24/7</span><span class="ticker-item">*</span><span class="ticker-item">Cero Errores Manuales</span><span class="ticker-item">*</span></div></div>
 <section class="hero">
-<img class="hero-media" src="assets/archon/hero-brain.png" alt="Sistema visual Archon">
+<img class="hero-media" src="assets/archon/impact-banner.png" alt="Sistema visual Archon">
 <div class="hero-grid"></div>
-<img class="hero-mark" src="assets/archon/archon-wordmark.png" alt="Archon Consultancies">
 <p class="hero-eyebrow">Archon Consultancies — Sistema Activo</p>
 <h1 class="hero-title"><span class="w">Tu negocio se</span><span class="g">desangra.</span><span class="w">Y ni lo sabes.</span></h1>
 <p class="hero-sub">Cada pedido copiado a mano. Cada Excel desincronizado. No es ineficiencia. Es <strong>hemorragia operativa en tiempo real</strong>. Tenemos el bisturi.</p>
@@ -201,11 +194,10 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <div class="ain">
 <p class="lbl">La Solucion</p>
 <h2 class="sec h2" style="font-family:'Cinzel Decorative',serif;font-size:clamp(40px,6vw,80px);line-height:1;margin-bottom:40px">La Arquitectura <span style="color:var(--green)">Archon</span></h2>
-<div class="showcase reveal"><img src="assets/archon/system-diagram.png" alt="Digital Brain Archon"></div>
 <div class="agrid">
 <div class="ac"><div class="ai">Modulo 01</div><div class="an">La Caja Fuerte</div><div class="at">Airtable — Base de datos relacional</div><p class="ad">Extraemos tus datos del panel vulnerable y los blindamos en una base de datos externa. El inventario real a prueba de caidas del servidor.</p></div>
 <div class="ac"><div class="ai">Modulo 02</div><div class="an">Las Arterias</div><div class="at">Make / n8n — Sistema nervioso central</div><p class="ad">Tuberias para que tu tienda hable con tu banco y tu almacen en milisegundos. Sin intervencion humana. Sin delays. Sin errores.</p></div>
-<div class="ac"><div class="ai">Modulo 03</div><div class="an">La Aduana</div><div class="at">Stripe — Seguridad criptografica</div><p class="ad">Ningun pedido pasa a preparacion sin confirmacion criptografica de pago. Cero fraudes. Cero pedidos sin cobrar.</p></div>
+<div class="ac"><div class="ai">Modulo 03</div><div class="an">La Aduana</div><div class="at">Stripe — Seguridad criptografica</div><p class="ad">Ningun pedido pasa a preparacion sin confirmacion criptografica de pago. Cero fraudes. Cero pedidos sin cobrar.</p><img style="display:block;width:100%;height:220px;object-fit:cover;object-position:center center;margin-top:24px;border:1px solid rgba(57,255,20,0.12)" src="assets/archon/operations-banner.png" alt="Sistema operativo Archon"></div>
 <div class="ac"><div class="ai">Modulo 04</div><div class="an">El Supervisor</div><div class="at">IA — Vigilancia permanente</div><p class="ad">Nodos de inteligencia artificial que auditan direcciones, detectan anomalias y notifican al cliente automaticamente.</p></div>
 </div>
 </div>
@@ -263,8 +255,6 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <h2 style="font-family:'Cinzel Decorative',serif;font-size:clamp(40px,6vw,80px);line-height:1;margin-bottom:40px">Archon <span style="color:var(--green)">Consultancies</span></h2>
 <div class="aboutgrid">
 <div>
-<img class="aboutmark" src="assets/archon/archon-wordmark.png" alt="Marca Archon">
-<div class="aboutvisual reveal"><img src="assets/archon/founder-portrait.png" alt="Founder Archon Consultancies"></div>
 <p style="font-size:16px;line-height:1.9;color:#ccc;margin-bottom:20px;">Somos una consultoria de infraestructuras algoritmicas fundada en Zaragoza con un objetivo claro: eliminar la variable humana de los procesos operativos criticos de los negocios.</p>
 <p style="font-size:16px;line-height:1.9;color:#ccc;">Fundada por Pablo Alcocer, estudiante de Marketing y Publicidad con una obsesion por la automatizacion inteligente aplicada a negocios reales.</p>
 </div>
@@ -295,7 +285,7 @@ footer{padding:60px;border-top:1px solid rgba(57,255,20,0.1);display:flex;justif
 <div class="bloglink">Leer articulo →</div>
 </article>
 <article class="blogcard">
-<img class="blogthumb" src="assets/archon/system-diagram.png" alt="Sistema n8n y Digital Brain">
+<img class="blogthumb" src="assets/archon/operations-banner.png" alt="Sistema n8n y Digital Brain">
 <div class="blogcat">Marzo 2026 — Tecnologia</div>
 <h3 class="blogtitle">Que es n8n y como puede sustituir a un empleado administrativo</h3>
 <p class="blogtext">n8n es la herramienta de automatizacion open source que usamos en Archon. Te explicamos que hace y por que es mejor que contratar a alguien para tareas repetitivas.</p>
