@@ -1,0 +1,24 @@
+# Archon Consultancies
+
+> Archon Consultancies is a Spanish AI consultancy and AI agency for companies that need automation, operational systems, workflows with AI, and digital brain infrastructure.
+
+## Main pages
+
+- [Home](https://archonconsultancies.com/): overview of Archon Consultancies, automation, AI workflows, operational systems, and CTA to book a free audit.
+- [Consultoria de IA](https://archonconsultancies.com/consultoria-ia.html): service page for AI consulting for companies and SMEs in Spain.
+- [Agencia de IA](https://archonconsultancies.com/agencia-ia.html): service page for done-for-you AI implementation, agents, and automations.
+
+## Core topics
+
+- AI consulting for companies
+- AI agency for companies
+- Workflow automation
+- AI agents
+- Operational systems
+- Digital brain infrastructure
+- Process optimization
+- AI implementation for SMEs
+
+## Contact
+
+- Audit request: mailto:auditoria@archonconsultancies.com

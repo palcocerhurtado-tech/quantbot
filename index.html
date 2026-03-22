@@ -4,36 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="MD0MtiYe9We5JQqG_ZiAK8qcA6-PZyUIP-LVGOFcgAM">
-<meta name="description" content="Archon Consultancies diseña automatizacion, IA y Digital Brain infrastructure para negocios que quieren operar con control, velocidad y menos friccion.">
+<meta name="description" content="Consultoria de IA y agencia de IA para empresas en Espana. Automatizacion, agentes y sistemas operativos para pymes que quieren escalar con mas control y menos trabajo manual.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://archonconsultancies.com/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://archonconsultancies.com/">
-<meta property="og:title" content="Archon Consultancies - Automatizacion, IA y sistemas operativos para empresas">
-<meta property="og:description" content="Tu negocio no necesita mas manos. Necesita sistema. Reserva una auditoria gratuita y descubre que automatizar primero.">
+<meta property="og:title" content="Consultoria de IA y agencia de IA para empresas | Archon Consultancies">
+<meta property="og:description" content="Automatizacion, workflows con IA y sistemas operativos para empresas. Reserva una auditoria gratuita y descubre que automatizar primero.">
 <meta property="og:image" content="https://archonconsultancies.com/archon_logo.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Archon Consultancies - Automatizacion, IA y sistemas operativos para empresas">
-<meta name="twitter:description" content="Automatizacion, IA y Digital Brain infrastructure para negocios que quieren operar con control real.">
+<meta name="twitter:title" content="Consultoria de IA y agencia de IA para empresas | Archon Consultancies">
+<meta name="twitter:description" content="Consultoria de IA, agencia de IA, automatizacion y sistemas operativos para empresas que necesitan control real.">
 <meta name="twitter:image" content="https://archonconsultancies.com/archon_logo.png">
 <meta name="theme-color" content="#070707">
-<title>Archon Consultancies - Tu negocio no necesita mas manos. Necesita sistema.</title>
+<title>Consultoria de IA y agencia de IA para empresas | Archon Consultancies</title>
 <link rel="icon" type="image/png" href="archon_logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Archon Consultancies",
-  "url": "https://archonconsultancies.com/",
-  "logo": "https://archonconsultancies.com/archon_logo.png",
-  "description": "Consultoria de automatizacion, IA y arquitectura operativa para empresas.",
-  "areaServed": "ES",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Zaragoza",
-    "addressCountry": "ES"
-  }
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Archon Consultancies",
+      "url": "https://archonconsultancies.com/",
+      "logo": "https://archonconsultancies.com/archon_logo.png",
+      "description": "Consultoria de IA, agencia de IA y arquitectura operativa para empresas.",
+      "areaServed": "ES",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Zaragoza",
+        "addressCountry": "ES"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "name": "Archon Consultancies",
+      "url": "https://archonconsultancies.com/"
+    },
+    {
+      "@type": "Service",
+      "name": "Consultoria de IA para empresas",
+      "serviceType": "Consultoria de IA",
+      "provider": {
+        "@type": "Organization",
+        "name": "Archon Consultancies"
+      },
+      "areaServed": "ES",
+      "url": "https://archonconsultancies.com/consultoria-ia.html"
+    },
+    {
+      "@type": "Service",
+      "name": "Agencia de IA para empresas",
+      "serviceType": "Agencia de IA",
+      "provider": {
+        "@type": "Organization",
+        "name": "Archon Consultancies"
+      },
+      "areaServed": "ES",
+      "url": "https://archonconsultancies.com/agencia-ia.html"
+    }
+  ]
 }
 </script>
 <style>
@@ -414,6 +445,49 @@ section{padding:88px 0}
   font-size:14px;
   line-height:1.85;
 }
+.intent-grid{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.intent-card{
+  padding:34px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 24px 70px rgba(0,0,0,0.24);
+}
+.intent-card strong{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.intent-card h3{
+  font-family:'Cinzel Decorative',serif;
+  font-size:30px;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.intent-card p{
+  color:#cdcdcd;
+  font-size:14px;
+  line-height:1.85;
+}
+.intent-link{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
+  color:var(--green);
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:11px;
+  font-weight:700;
+}
 .compare-grid{
   margin-top:40px;
   display:grid;
@@ -645,6 +719,7 @@ footer{
   .calcgrid,
   .cta-panel,
   .compare-grid,
+  .intent-grid,
   .solution-grid,
   .problem-grid{
     grid-template-columns:1fr;
@@ -675,6 +750,7 @@ footer{
     </a>
     <ul class="navlinks">
       <li><a href="#problema">Problema</a></li>
+      <li><a href="#servicios-ia">Servicios IA</a></li>
       <li><a href="#sistema">Sistema</a></li>
       <li><a href="#antes-despues">Antes / Despues</a></li>
       <li><a href="#auditoria">Auditoria</a></li>
@@ -689,8 +765,8 @@ footer{
       <div class="hero-grid">
         <div class="hero-copy reveal">
           <p class="eyebrow">Archon Consultancies - Digital Brain Infrastructure</p>
-          <h1>Tu negocio no necesita mas manos. <span>Necesita sistema.</span></h1>
-          <p class="hero-sub">Disenamos automatizacion, workflows con IA y una capa operativa 24/7 para que ventas, cobros, ejecucion y control dejen de depender del caos manual.</p>
+          <h1>Consultoria de IA para empresas que <span>necesitan sistema.</span></h1>
+          <p class="hero-sub">Archon combina consultoria de IA, automatizacion y ejecucion tipo agencia de IA para que ventas, cobros, operaciones y control dejen de depender del caos manual.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#auditoria">Reservar auditoria gratuita</a>
             <a class="btn btn-secondary" href="#sistema">Ver arquitectura</a>
@@ -782,6 +858,28 @@ footer{
       <div class="reframe reveal">
         <strong>No necesitas mas gente para sostener el caos. Necesitas un sistema que lo elimine.</strong>
         <span>Archon construye esa capa: automatizacion, IA y reglas claras para que el negocio opere con control, velocidad y menos friccion.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicios-ia">
+    <div class="shell">
+      <p class="section-label">Servicios principales</p>
+      <h2 class="section-title">Dos intenciones de busqueda. <span>Dos paginas pensadas para convertir.</span></h2>
+      <p class="section-intro">Si buscas una consultoria de IA para definir estrategia o una agencia de IA para ejecutar el sistema completo, aqui tienes el camino correcto.</p>
+      <div class="intent-grid">
+        <article class="intent-card reveal">
+          <strong>Servicio 01</strong>
+          <h3>Consultoria de IA</h3>
+          <p>Analizamos procesos, herramientas, dependencias humanas y oportunidades reales de automatizacion para empresas y pymes en Espana.</p>
+          <a class="intent-link" href="/consultoria-ia.html">Ver pagina de consultoria</a>
+        </article>
+        <article class="intent-card reveal">
+          <strong>Servicio 02</strong>
+          <h3>Agencia de IA</h3>
+          <p>Disenamos y ejecutamos automatizaciones, agentes y workflows de IA end-to-end para empresas que quieren un socio de implementacion real.</p>
+          <a class="intent-link" href="/agencia-ia.html">Ver pagina de agencia</a>
+        </article>
       </div>
     </div>
   </section>
@@ -929,6 +1027,7 @@ footer{
     </div>
     <ul class="footlinks">
       <li><a href="#problema">Problema</a></li>
+      <li><a href="#servicios-ia">Servicios IA</a></li>
       <li><a href="#sistema">Sistema</a></li>
       <li><a href="#antes-despues">Antes / Despues</a></li>
       <li><a href="#auditoria">Auditoria</a></li>

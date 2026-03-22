@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Consultoria de IA para empresas y pymes en Espana. Auditoria, roadmap, automatizacion y estrategia para implantar IA con criterio de negocio.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://archonconsultancies.com/consultoria-ia.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://archonconsultancies.com/consultoria-ia.html">
+<meta property="og:title" content="Consultoria de IA para empresas | Archon Consultancies">
+<meta property="og:description" content="Consultoria de IA para empresas que necesitan diagnostico, roadmap y automatizacion con foco en retorno.">
+<meta property="og:image" content="https://archonconsultancies.com/archon_logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Consultoria de IA para empresas | Archon Consultancies">
+<meta name="twitter:description" content="Auditoria, roadmap y consultoria de IA para empresas en Espana.">
+<meta name="twitter:image" content="https://archonconsultancies.com/archon_logo.png">
+<meta name="theme-color" content="#070707">
+<title>Consultoria de IA para empresas | Archon Consultancies</title>
+<link rel="icon" type="image/png" href="archon_logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Archon Consultancies",
+      "url": "https://archonconsultancies.com/",
+      "logo": "https://archonconsultancies.com/archon_logo.png"
+    },
+    {
+      "@type": "Service",
+      "name": "Consultoria de IA para empresas",
+      "serviceType": "Consultoria de IA",
+      "provider": {
+        "@type": "Organization",
+        "name": "Archon Consultancies"
+      },
+      "areaServed": "ES",
+      "url": "https://archonconsultancies.com/consultoria-ia.html",
+      "description": "Consultoria de IA para empresas que necesitan diagnostico, roadmap y automatizacion con foco en retorno."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": "https://archonconsultancies.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Consultoria de IA",
+          "item": "https://archonconsultancies.com/consultoria-ia.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Que hace una consultoria de IA para empresas",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Analiza procesos, datos, herramientas y equipo para definir donde aplicar IA con mas retorno y menos riesgo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Cuanto tarda una consultoria de IA",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depende del alcance, pero una auditoria inicial puede dar claridad en dias y una hoja de ruta en pocas semanas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Para quien es util una consultoria de IA",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Para empresas y pymes que tienen operaciones manuales, herramientas desconectadas o dudas sobre que automatizar primero."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070707;
+  --panel:#121212;
+  --line:rgba(57,255,20,0.12);
+  --line-strong:rgba(57,255,20,0.24);
+  --green:#39ff14;
+  --white:#ffffff;
+  --muted:#c8c8c8;
+  --soft:#909090;
+}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(circle at top, rgba(57,255,20,0.08), transparent 28%),
+    linear-gradient(180deg, #090909 0%, #070707 45%, #0b0b0b 100%);
+  color:var(--white);
+  font-family:'Cinzel',serif;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+  background-size:64px 64px;
+  mask-image:linear-gradient(180deg, rgba(0,0,0,0.34), rgba(0,0,0,0.1));
+}
+a{color:inherit}
+.shell{width:min(1160px, calc(100% - 48px));margin:0 auto}
+nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(7,7,7,0.88);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.navin{
+  width:min(1160px, calc(100% - 48px));
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 0;
+}
+.brand{text-decoration:none;display:flex;flex-direction:column;gap:2px}
+.brand strong{font-family:'Cinzel Decorative',serif;font-size:22px}
+.brand span{color:var(--green);font-size:10px;letter-spacing:4px;text-transform:uppercase}
+.navcta{
+  text-decoration:none;
+  background:var(--green);
+  color:#050505;
+  padding:14px 18px;
+  font-size:11px;
+  letter-spacing:2.8px;
+  text-transform:uppercase;
+  font-weight:700;
+}
+main{padding:64px 0 90px}
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(320px,0.84fr);
+  gap:18px;
+  align-items:stretch;
+}
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 24px 70px rgba(0,0,0,0.24);
+}
+.hero-copy,.hero-side,.card,.faq,.cta-panel{
+  padding:34px;
+}
+.eyebrow{
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+h1{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(40px, 7vw, 82px);
+  line-height:0.96;
+  max-width:11ch;
+}
+h1 span{color:var(--green)}
+.lead{
+  margin-top:24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.9;
+  max-width:60ch;
+}
+.actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:54px;
+  padding:0 22px;
+  text-decoration:none;
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-weight:700;
+}
+.btn.primary{background:var(--green);color:#050505}
+.btn.secondary{border:1px solid var(--line-strong)}
+.hero-side h2,.section-title,.cta-panel h2{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(28px, 4vw, 44px);
+  line-height:1.02;
+}
+.hero-side p,.card p,.intro,.faq p,.cta-panel p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.85;
+}
+.mini-list{display:grid;gap:12px;margin-top:22px}
+.mini-item{
+  padding:14px 16px;
+  border:1px solid var(--line);
+  color:#d8d8d8;
+  font-size:13px;
+  line-height:1.75;
+}
+section{padding-top:76px}
+.section-label{
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.section-title{max-width:14ch}
+.intro{margin-top:18px;max-width:64ch}
+.grid{
+  margin-top:34px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.card h3,.faq h3{
+  font-family:'Cinzel Decorative',serif;
+  font-size:26px;
+  line-height:1.08;
+  margin-bottom:12px;
+}
+.card strong{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.faq-grid{
+  margin-top:34px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.cta-panel{
+  display:grid;
+  grid-template-columns:minmax(0,0.95fr) minmax(320px,0.85fr);
+  gap:18px;
+}
+.form{display:grid;gap:14px}
+.form input,.form select{
+  width:100%;
+  min-height:54px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--white);
+  padding:0 16px;
+  font-family:'Cinzel',serif;
+  font-size:12px;
+  outline:none;
+}
+.form select{-webkit-appearance:none;appearance:none}
+.form input::placeholder{color:rgba(255,255,255,0.34)}
+.form button{
+  min-height:56px;
+  border:none;
+  background:var(--green);
+  color:#050505;
+  font-family:'Cinzel',serif;
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-weight:700;
+  cursor:pointer;
+}
+.inline-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
+.inline-links a{
+  text-decoration:none;
+  color:var(--green);
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+footer{
+  padding:34px 0 48px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.foot strong{font-family:'Cinzel Decorative',serif;font-size:22px}
+.foot span{display:block;color:var(--soft);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.foot a{text-decoration:none;color:#d0d0d0;font-size:10px;letter-spacing:2px;text-transform:uppercase}
+@media (max-width: 960px){
+  .hero,.grid,.faq-grid,.cta-panel{grid-template-columns:1fr}
+}
+@media (max-width: 720px){
+  .shell,.navin{width:min(100% - 32px, 1160px)}
+  main{padding:42px 0 72px}
+  .hero-copy,.hero-side,.card,.faq,.cta-panel{padding:24px}
+  section{padding-top:58px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="navin">
+    <a class="brand" href="/"><strong>Archon</strong><span>Consultancies</span></a>
+    <a class="navcta" href="#auditoria">Reservar auditoria</a>
+  </div>
+</nav>
+
+<main>
+  <div class="shell">
+    <section class="hero">
+      <div class="panel hero-copy">
+        <p class="eyebrow">Consultoria de IA</p>
+        <h1>Consultoria de IA para empresas que quieren <span>orden antes que ruido.</span></h1>
+        <p class="lead">Si tu empresa quiere aplicar IA pero no sabe que automatizar primero, como conectar herramientas o donde esta el retorno real, esta pagina es para ti. Hacemos consultoria de IA con foco en procesos, operaciones y decision.</p>
+        <div class="actions">
+          <a class="btn primary" href="#auditoria">Reservar auditoria gratuita</a>
+          <a class="btn secondary" href="/agencia-ia.html">Ver agencia de IA</a>
+        </div>
+      </div>
+      <aside class="panel hero-side">
+        <p class="eyebrow">Que hacemos</p>
+        <h2>Diagnostico, roadmap y prioridad.</h2>
+        <p>Una consultoria de IA util no empieza por comprar herramientas. Empieza por entender donde pierdes tiempo, donde se atasca la informacion y donde la automatizacion tendra impacto real.</p>
+        <div class="mini-list">
+          <div class="mini-item">Auditamos procesos manuales, dependencias humanas y tareas repetitivas.</div>
+          <div class="mini-item">Definimos que automatizar primero, que mantener y que eliminar.</div>
+          <div class="mini-item">Traducimos IA y automatizacion a decisiones operativas con ROI.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section>
+      <p class="section-label">Para quien</p>
+      <h2 class="section-title">La consultoria de IA sirve cuando el negocio ya vende, pero el sistema no acompana.</h2>
+      <p class="intro">Trabajamos mejor con pymes y empresas que ya tienen volumen, equipo y herramientas, pero siguen funcionando con demasiada intervencion manual.</p>
+      <div class="grid">
+        <article class="panel card">
+          <strong>Escenario 01</strong>
+          <h3>E-commerce y operaciones</h3>
+          <p>Pedidos, stock, incidencias, cobros y logistica moviendose entre paneles, emails y personas.</p>
+        </article>
+        <article class="panel card">
+          <strong>Escenario 02</strong>
+          <h3>Equipos administrativos saturados</h3>
+          <p>Procesos repetitivos que consumen horas de gente buena en trabajo que no deberia seguir siendo manual.</p>
+        </article>
+        <article class="panel card">
+          <strong>Escenario 03</strong>
+          <h3>Direccion sin visibilidad real</h3>
+          <p>Datos dispersos, decisiones lentas y dudas sobre donde la IA puede ahorrar tiempo sin romper la operativa.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="section-label">Entregables</p>
+      <h2 class="section-title">Que recibe una empresa despues de la consultoria de IA</h2>
+      <div class="grid">
+        <article class="panel card">
+          <strong>Entrega 01</strong>
+          <h3>Mapa de procesos</h3>
+          <p>Una vision clara de cuellos de botella, repeticiones, dependencias y tareas absorbibles por IA o automatizacion.</p>
+        </article>
+        <article class="panel card">
+          <strong>Entrega 02</strong>
+          <h3>Roadmap por prioridad</h3>
+          <p>Que hacer primero, que impacto esperar y que secuencia tiene mas sentido para no automatizar caos.</p>
+        </article>
+        <article class="panel card">
+          <strong>Entrega 03</strong>
+          <h3>Plan de implementacion</h3>
+          <p>Si hace falta, lo convertimos en ejecucion mediante nuestra pagina de <a href="/agencia-ia.html">agencia de IA</a>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="section-label">FAQ</p>
+      <h2 class="section-title">Preguntas habituales sobre consultoria de IA</h2>
+      <div class="faq-grid">
+        <article class="panel faq">
+          <h3>Que hace una consultoria de IA</h3>
+          <p>Analiza procesos, herramientas, datos y equipo para detectar donde la IA y la automatizacion pueden mejorar margen, velocidad y control.</p>
+        </article>
+        <article class="panel faq">
+          <h3>Cuanto tarda</h3>
+          <p>Una auditoria inicial puede darte claridad en pocos dias. El roadmap completo depende del volumen y de la complejidad del negocio.</p>
+        </article>
+        <article class="panel faq">
+          <h3>Y si ya usamos ChatGPT</h3>
+          <p>Mejor. Pero usar una herramienta no equivale a tener un sistema. La consultoria sirve justo para pasar de uso suelto a operativa integrada.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="auditoria">
+      <div class="panel cta-panel">
+        <div>
+          <p class="section-label">CTA</p>
+          <h2>Reserva una auditoria gratuita y te diremos si una consultoria de IA tiene sentido para tu empresa.</h2>
+          <p>Si el problema es de proceso, te lo diremos. Si el problema es de ejecucion, tambien. La idea es poner orden antes de vender complejidad.</p>
+          <div class="inline-links">
+            <a href="/">Volver al inicio</a>
+            <a href="/agencia-ia.html">Ver agencia de IA</a>
+          </div>
+        </div>
+        <div>
+          <form class="form" onsubmit="handleSubmit(event)">
+            <input type="text" name="name" placeholder="Nombre y apellidos" autocomplete="name" required>
+            <input type="email" name="email" placeholder="Email de contacto" autocomplete="email" required>
+            <input type="text" name="business" placeholder="Empresa o negocio" autocomplete="organization" required>
+            <select name="platform" required>
+              <option value="" disabled selected>Tipo de operativa</option>
+              <option>E-commerce</option>
+              <option>Servicios</option>
+              <option>Operaciones internas</option>
+              <option>Otro</option>
+            </select>
+            <button type="submit">Preparar solicitud</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="shell foot">
+    <div>
+      <strong>Archon Consultancies</strong>
+      <span>Consultoria de IA - Automatizacion - Arquitectura operativa</span>
+    </div>
+    <a href="/">Inicio</a>
+  </div>
+</footer>
+
+<script>
+function handleSubmit(e){
+  e.preventDefault();
+  var form = e.target;
+  var data = new FormData(form);
+  var name = data.get("name") || "Nombre";
+  var email = data.get("email") || "Email";
+  var business = data.get("business") || "Negocio";
+  var platform = data.get("platform") || "Operativa no indicada";
+  var subject = encodeURIComponent("Solicitud de consultoria de IA - " + business);
+  var body = encodeURIComponent(
+    "Nombre: " + name + "\n" +
+    "Email: " + email + "\n" +
+    "Negocio: " + business + "\n" +
+    "Operativa: " + platform + "\n\n" +
+    "Quiero reservar una auditoria para valorar una consultoria de IA."
+  );
+  var button = form.querySelector("button");
+  button.textContent = "Abriendo borrador...";
+  window.location.href = "mailto:auditoria@archonconsultancies.com?subject=" + subject + "&body=" + body;
+}
+</script>
+</body>
+</html>
