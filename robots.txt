@@ -2,15 +2,18 @@ User-agent: *
 Allow: /
 Disallow: /archon.html
 Disallow: /sem-playbook.md
+Disallow: /backlinks-local-seo-playbook.md
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /archon.html
 Disallow: /sem-playbook.md
+Disallow: /backlinks-local-seo-playbook.md
 
 User-agent: GPTBot
 Allow: /
 Disallow: /archon.html
 Disallow: /sem-playbook.md
+Disallow: /backlinks-local-seo-playbook.md
 
 Sitemap: https://archonconsultancies.com/sitemap.xml

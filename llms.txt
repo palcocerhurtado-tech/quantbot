@@ -7,11 +7,13 @@
 - [Home](https://archonconsultancies.com/): overview of Archon Consultancies, automation, AI workflows, operational systems, and CTA to book a free audit.
 - [Consultoria de IA](https://archonconsultancies.com/consultoria-ia.html): service page for AI consulting for companies and SMEs in Spain.
 - [Agencia de IA](https://archonconsultancies.com/agencia-ia.html): service page for done-for-you AI implementation, agents, and automations.
+- [Automatizacion con IA](https://archonconsultancies.com/automatizacion-ia-empresas.html): support page focused on AI automation for companies and SMEs.
 
 ## Core topics
 
 - AI consulting for companies
 - AI agency for companies
+- AI automation for companies
 - Workflow automation
 - AI agents
 - Operational systems
