@@ -253,14 +253,20 @@ nav{
   flex-wrap:wrap;
   gap:12px;
   margin-top:24px;
+  align-items:stretch;
 }
 .note{
-  padding:10px 14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:10px 16px;
   border:1px solid var(--line);
   color:#d8d8d8;
   font-size:10px;
   letter-spacing:2px;
   text-transform:uppercase;
+  text-align:center;
 }
 .hero-side{
   padding:34px;
@@ -325,9 +331,14 @@ nav{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:14px;
+  align-items:stretch;
 }
 .metric{
-  padding:22px 22px 20px;
+  padding:24px 24px 22px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  text-align:center;
 }
 .metric strong{
   display:block;
@@ -335,16 +346,17 @@ nav{
   font-size:10px;
   letter-spacing:4px;
   text-transform:uppercase;
-  margin-bottom:14px;
+  margin-bottom:0;
 }
 .metric span{
   display:block;
   font-family:'Cinzel Decorative',serif;
   font-size:34px;
-  line-height:1;
+  line-height:1.05;
 }
 .metric p{
-  margin-top:12px;
+  margin:0 auto;
+  max-width:26ch;
   color:var(--muted-soft);
   font-size:12px;
   line-height:1.75;
@@ -736,6 +748,8 @@ footer{
   .hero-copy{padding:24px}
   .hero h1{font-size:clamp(34px, 11vw, 62px)}
   .section-title{font-size:clamp(30px, 10vw, 54px)}
+  .hero-notes{flex-direction:column}
+  .note{width:100%}
   .reframe{padding:24px;flex-direction:column;align-items:flex-start}
   .reframe strong{max-width:none}
 }
@@ -772,7 +786,7 @@ footer{
             <a class="btn btn-secondary" href="#sistema">Ver arquitectura</a>
           </div>
           <div class="hero-notes">
-            <span class="note">15 min</span>
+            <span class="note">33 minutos</span>
             <span class="note">Sin compromiso</span>
             <span class="note">Respuesta en 24h</span>
           </div>
@@ -806,12 +820,12 @@ footer{
       <div class="metrics reveal">
         <article class="metric">
           <strong>Latencia operativa</strong>
-          <span id="latencyValue">012 ms</span>
+          <span id="latencyValue">014 ms</span>
           <p>Lo que tarda tu sistema en reaccionar cuando un pedido o incidencia ya existe.</p>
         </article>
         <article class="metric">
           <strong>Horas recuperables</strong>
-          <span id="hoursValue">24 h</span>
+          <span id="hoursValue">30 h</span>
           <p>Tiempo mensual que una infraestructura bien planteada devuelve al equipo.</p>
         </article>
         <article class="metric">
@@ -995,7 +1009,7 @@ footer{
       <div class="cta-panel reveal">
         <div>
           <p class="section-label">CTA</p>
-          <h3>Reserva una auditoria gratuita y te diremos que automatizar primero.</h3>
+          <h3>Reserva una auditoria gratuita de 33 minutos y te diremos que automatizar primero.</h3>
           <p class="cta-copy">Si vemos retorno, te lo diremos claro. Si no lo vemos, tambien. La idea no es venderte una capa mas de complejidad, sino quitarla.</p>
           <div class="cta-points">
             <div class="cta-point">Analizamos friccion operativa, dependencias humanas y herramientas desconectadas.</div>
@@ -1017,8 +1031,8 @@ footer{
             </select>
             <button type="submit">Preparar solicitud</button>
           </form>
-          <p class="formnote">Al pulsar el boton se abre un borrador de correo con tus datos para reservar la auditoria.</p>
-          <p class="disclaimer">15 minutos. Sin compromiso. Respuesta humana.</p>
+          <p class="formnote">Al pulsar el boton se abre un borrador de correo con tus datos para reservar la auditoria gratuita de 33 minutos.</p>
+          <p class="disclaimer">33 minutos. Sin compromiso. Respuesta humana.</p>
         </div>
       </div>
     </div>
@@ -1056,27 +1070,15 @@ function handleSubmit(e){
     "Email: " + email + "\n" +
     "Negocio: " + business + "\n" +
     "Operativa: " + platform + "\n\n" +
-    "Quiero reservar una auditoria y revisar que automatizar primero."
+    "Quiero reservar una auditoria gratuita de 33 minutos y revisar que automatizar primero."
   );
   var button = form.querySelector("button");
   button.textContent = "Abriendo borrador...";
   window.location.href = "mailto:auditoria@archonconsultancies.com?subject=" + subject + "&body=" + body;
 }
 
-const liveStates = ["ACTIVO", "VIGILANDO", "SIN FRICCION", "CONTROLADO"];
-let liveTick = 0;
-
 function formatEuros(value){
   return new Intl.NumberFormat("es-ES", {maximumFractionDigits: 0}).format(Math.round(value)) + " EUR";
-}
-
-function updateHeroPanel(){
-  const latency = 12 + (liveTick % 4) * 2;
-  const hours = 24 + (liveTick % 4) * 6;
-  document.getElementById("latencyValue").textContent = String(latency).padStart(3, "0") + " ms";
-  document.getElementById("hoursValue").textContent = hours + " h";
-  document.getElementById("stateValue").textContent = liveStates[liveTick % liveStates.length];
-  liveTick += 1;
 }
 
 function updateLeakCalculator(){
@@ -1133,10 +1135,8 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   if (input) input.addEventListener("input", updateLeakCalculator);
 });
 
-updateHeroPanel();
 updateLeakCalculator();
 initReveal();
-setInterval(updateHeroPanel, 2500);
 </script>
 </body>
 </html>
