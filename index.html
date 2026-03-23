@@ -1090,7 +1090,14 @@ footer{
           </div>
         </div>
         <div>
-          <form class="form" onsubmit="handleSubmit(event)">
+          <form class="form" action="https://formsubmit.co/auditoria@archonconsultancies.com" method="POST">
+            <input type="hidden" name="_subject" value="Solicitud de auditoria - Home Archon">
+            <input type="hidden" name="_next" value="https://archonconsultancies.com/gracias.html">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_url" value="https://archonconsultancies.com/#auditoria">
+            <input type="hidden" name="_autoresponse" value="Hemos recibido tu solicitud de auditoria de 33 minutos. Si encaja con lo que hacemos, te responderemos con una propuesta de hueco lo antes posible.">
+            <input type="hidden" name="service" value="Auditoria Archon - Home">
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
             <input type="text" name="name" placeholder="Nombre y apellidos" autocomplete="name" required>
             <input type="email" name="email" placeholder="Email de contacto" autocomplete="email" required>
             <input type="text" name="business" placeholder="Empresa o negocio" autocomplete="organization" required>
@@ -1101,9 +1108,9 @@ footer{
               <option>Operaciones internas</option>
               <option>Otro</option>
             </select>
-            <button type="submit">Preparar solicitud</button>
+            <button type="submit">Reservar auditoria</button>
           </form>
-          <p class="formnote">Al pulsar el boton se abre un borrador de correo con tus datos para reservar la auditoria gratuita de 33 minutos.</p>
+          <p class="formnote">Al enviar el formulario recibimos tu solicitud real y te llevamos a una confirmacion limpia.</p>
           <p class="disclaimer">33 minutos. Sin compromiso. Respuesta humana.</p>
         </div>
       </div>
@@ -1128,27 +1135,6 @@ footer{
 </footer>
 
 <script>
-function handleSubmit(e){
-  e.preventDefault();
-  var form = e.target;
-  var data = new FormData(form);
-  var name = data.get("name") || "Nombre";
-  var email = data.get("email") || "Email";
-  var business = data.get("business") || "Negocio";
-  var platform = data.get("platform") || "Operativa no indicada";
-  var subject = encodeURIComponent("Solicitud de auditoria - " + business);
-  var body = encodeURIComponent(
-    "Nombre: " + name + "\n" +
-    "Email: " + email + "\n" +
-    "Negocio: " + business + "\n" +
-    "Operativa: " + platform + "\n\n" +
-    "Quiero reservar una auditoria gratuita de 33 minutos y revisar que automatizar primero."
-  );
-  var button = form.querySelector("button");
-  button.textContent = "Abriendo borrador...";
-  window.location.href = "mailto:auditoria@archonconsultancies.com?subject=" + subject + "&body=" + body;
-}
-
 function formatEuros(value){
   return new Intl.NumberFormat("es-ES", {maximumFractionDigits: 0}).format(Math.round(value)) + " EUR";
 }

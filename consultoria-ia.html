@@ -289,6 +289,13 @@ section{padding-top:76px}
   font-weight:700;
   cursor:pointer;
 }
+.formnote{
+  margin-top:14px;
+  color:#98a08f;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
 .inline-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:24px}
 .inline-links a{
   text-decoration:none;
@@ -455,7 +462,14 @@ footer{
           </div>
         </div>
         <div>
-          <form class="form" onsubmit="handleSubmit(event)">
+          <form class="form" action="https://formsubmit.co/auditoria@archonconsultancies.com" method="POST">
+            <input type="hidden" name="_subject" value="Solicitud de consultoria de IA - Archon">
+            <input type="hidden" name="_next" value="https://archonconsultancies.com/gracias.html">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_url" value="https://archonconsultancies.com/consultoria-ia.html">
+            <input type="hidden" name="_autoresponse" value="Hemos recibido tu solicitud de auditoria de 33 minutos para valorar una consultoria de IA. Si encaja con lo que hacemos, te responderemos con el siguiente paso.">
+            <input type="hidden" name="service" value="Consultoria de IA">
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
             <input type="text" name="name" placeholder="Nombre y apellidos" autocomplete="name" required>
             <input type="email" name="email" placeholder="Email de contacto" autocomplete="email" required>
             <input type="text" name="business" placeholder="Empresa o negocio" autocomplete="organization" required>
@@ -466,8 +480,9 @@ footer{
               <option>Operaciones internas</option>
               <option>Otro</option>
             </select>
-            <button type="submit">Preparar solicitud</button>
+            <button type="submit">Reservar auditoria</button>
           </form>
+          <p class="formnote">Solicitud real. Confirmacion inmediata. Respuesta humana.</p>
         </div>
       </div>
     </section>
@@ -484,27 +499,5 @@ footer{
   </div>
 </footer>
 
-<script>
-function handleSubmit(e){
-  e.preventDefault();
-  var form = e.target;
-  var data = new FormData(form);
-  var name = data.get("name") || "Nombre";
-  var email = data.get("email") || "Email";
-  var business = data.get("business") || "Negocio";
-  var platform = data.get("platform") || "Operativa no indicada";
-  var subject = encodeURIComponent("Solicitud de consultoria de IA - " + business);
-  var body = encodeURIComponent(
-    "Nombre: " + name + "\n" +
-    "Email: " + email + "\n" +
-    "Negocio: " + business + "\n" +
-    "Operativa: " + platform + "\n\n" +
-    "Quiero reservar una auditoria gratuita de 33 minutos para valorar una consultoria de IA."
-  );
-  var button = form.querySelector("button");
-  button.textContent = "Abriendo borrador...";
-  window.location.href = "mailto:auditoria@archonconsultancies.com?subject=" + subject + "&body=" + body;
-}
-</script>
 </body>
 </html>
