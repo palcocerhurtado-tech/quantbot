@@ -500,6 +500,49 @@ section{padding:88px 0}
   font-size:11px;
   font-weight:700;
 }
+.insights-grid{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+.insight-card{
+  padding:30px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 24px 70px rgba(0,0,0,0.24);
+}
+.insight-card strong{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.insight-card h3{
+  font-family:'Cinzel Decorative',serif;
+  font-size:28px;
+  line-height:1.08;
+  margin-bottom:14px;
+}
+.insight-card p{
+  color:#cdcdcd;
+  font-size:14px;
+  line-height:1.85;
+}
+.insight-card a{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
+  color:var(--green);
+  text-decoration:none;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:11px;
+  font-weight:700;
+}
 .compare-grid{
   margin-top:40px;
   display:grid;
@@ -731,6 +774,7 @@ footer{
   .calcgrid,
   .cta-panel,
   .compare-grid,
+  .insights-grid,
   .intent-grid,
   .solution-grid,
   .problem-grid{
@@ -1000,6 +1044,34 @@ footer{
             <span class="chip" id="urgencyChip">Urgencia moderada</span>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="insights">
+    <div class="shell">
+      <p class="section-label">Insights</p>
+      <h2 class="section-title">Lecturas utiles para entender <span>donde empezar</span></h2>
+      <p class="section-intro">Tres piezas concretas para fundadores y operadores que quieren ver casos, enfoque y aplicaciones reales antes de reservar la auditoria.</p>
+      <div class="insights-grid">
+        <article class="insight-card reveal">
+          <strong>Consultoria</strong>
+          <h3>Consultoria de IA para pymes</h3>
+          <p>Cuando hace falta ordenar prioridades, detectar cuellos de botella y decidir que automatizar primero sin complicar mas la operativa.</p>
+          <a href="/consultoria-ia-para-pymes.html">Leer insight</a>
+        </article>
+        <article class="insight-card reveal">
+          <strong>E-commerce</strong>
+          <h3>Agencia de IA para ecommerce</h3>
+          <p>Un ejemplo claro de como conectar pedidos, soporte, incidencias y seguimiento sin depender de trabajo manual repetitivo.</p>
+          <a href="/agencia-ia-para-ecommerce.html">Leer insight</a>
+        </article>
+        <article class="insight-card reveal">
+          <strong>Soporte</strong>
+          <h3>Agentes de IA para soporte cliente</h3>
+          <p>Uno de los casos mas rapidos para liberar tiempo, responder mejor y dejar reglas claras donde antes habia carga operativa.</p>
+          <a href="/agentes-ia-soporte-cliente.html">Leer insight</a>
+        </article>
       </div>
     </div>
   </section>
