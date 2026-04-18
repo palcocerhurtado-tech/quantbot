@@ -3,12 +3,19 @@ data/market.py
 ==============
 Acceso a datos de mercado vía API pública de Binance.
 No necesita clave API para los endpoints de mercado.
+get_account_snapshot() sí requiere API key (endpoints privados).
 """
 
+import hashlib
+import hmac
 import time
+from datetime import datetime
 import requests
 import pandas as pd
-from config.settings import BINANCE_API_BASE, QUOTE, TOP_N_SCAN
+from config.settings import (
+    BINANCE_API_BASE, QUOTE, TOP_N_SCAN,
+    BINANCE_API_KEY, BINANCE_SECRET_KEY,
+)
 from logs.logger import get_logger
 
 log = get_logger("market")
@@ -110,6 +117,88 @@ def get_latest_price(symbol: str) -> float:
     except Exception as e:
         log.error(f"Error precio {symbol}: {e}")
         return 0.0
+
+
+# ── Cuenta Binance (privado, requiere API key) ───────────────────────────────
+
+def _signed_get(path: str, params=None) -> dict:
+    """Request GET firmada con HMAC-SHA256 para endpoints privados de Binance."""
+    params = dict(params or {})
+    params["timestamp"]  = int(time.time() * 1000)
+    params["recvWindow"] = 5000
+    from urllib.parse import urlencode
+    query = urlencode(params)
+    sig   = hmac.new(
+        BINANCE_SECRET_KEY.encode(),
+        query.encode(),
+        hashlib.sha256,
+    ).hexdigest()
+    params["signature"] = sig
+    headers = {"X-MBX-APIKEY": BINANCE_API_KEY}
+    r = _session.get(BINANCE_API_BASE + path, params=params, headers=headers, timeout=TIMEOUT)
+    r.raise_for_status()
+    return r.json()
+
+
+def get_account_snapshot() -> dict:
+    """
+    Devuelve un resumen de la cuenta Binance Spot con saldos reales.
+
+    Retorna dict con:
+        balances   : lista de {asset, free, locked, price_usdt, value_usdt}
+        total_usdt : valor total estimado en USDT
+        updated_at : timestamp
+    """
+    if not BINANCE_API_KEY or not BINANCE_SECRET_KEY:
+        return {"error": "Sin API key configurada", "balances": [], "total_usdt": 0}
+
+    try:
+        data = _signed_get("/api/v3/account")
+    except Exception as e:
+        log.error(f"Error cuenta Binance: {e}")
+        return {"error": str(e), "balances": [], "total_usdt": 0}
+
+    # Filtrar activos con saldo > 0
+    non_zero = [
+        b for b in data.get("balances", [])
+        if float(b["free"]) + float(b["locked"]) > 0
+    ]
+
+    # Obtener precios en USDT para cada activo
+    rows = []
+    total_usdt = 0.0
+    for b in non_zero:
+        asset  = b["asset"]
+        free   = float(b["free"])
+        locked = float(b["locked"])
+        total  = free + locked
+
+        if asset == "USDT":
+            price_usdt = 1.0
+        elif asset in ("USDC", "BUSD", "DAI", "TUSD"):
+            price_usdt = 1.0
+        else:
+            price_usdt = get_latest_price(f"{asset}USDT")
+            if price_usdt == 0:
+                price_usdt = get_latest_price(f"{asset}BTC") * get_latest_price("BTCUSDT")
+
+        value = total * price_usdt
+        total_usdt += value
+        rows.append({
+            "asset":       asset,
+            "free":        round(free, 8),
+            "locked":      round(locked, 8),
+            "total":       round(total, 8),
+            "price_usdt":  round(price_usdt, 6),
+            "value_usdt":  round(value, 4),
+        })
+
+    rows.sort(key=lambda x: x["value_usdt"], reverse=True)
+    return {
+        "balances":   rows,
+        "total_usdt": round(total_usdt, 2),
+        "updated_at": datetime.now().strftime("%H:%M:%S"),
+    }
 
 
 # ── Compatibilidad con código heredado ────────────────────────────────────────

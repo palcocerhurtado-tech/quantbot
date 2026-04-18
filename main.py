@@ -23,7 +23,7 @@ from datetime import datetime
 from rich.console import Console
 from rich.table import Table
 
-from data.market import get_top_pairs_by_volume, fetch_ohlcv, get_latest_price
+from data.market import get_top_pairs_by_volume, fetch_ohlcv, get_latest_price, get_account_snapshot
 from models.elliott_strategy import ElliottStrategy
 from execution.executor import PaperTrader, LiveTrader
 from config.settings import (
@@ -160,16 +160,44 @@ def run_cycle(timeframe: str) -> None:
 
     console.print(table)
 
-    # ── 3. Resumen ───────────────────────────────────────────────────────────
+    # ── 3. Cuenta real Binance ────────────────────────────────────────────────
+    snap = get_account_snapshot()
+    if snap.get("error"):
+        console.print(f"[dim yellow]Cuenta Binance: {snap['error']}[/dim yellow]")
+    else:
+        acc_table = Table(title=f"Cuenta Binance — {snap['updated_at']}", show_header=True)
+        acc_table.add_column("Activo",       style="cyan",  min_width=8)
+        acc_table.add_column("Disponible",   style="white", min_width=14)
+        acc_table.add_column("Bloqueado",    style="dim",   min_width=12)
+        acc_table.add_column("Precio USDT",  style="white", min_width=14)
+        acc_table.add_column("Valor USDT",   style="bold",  min_width=14)
+
+        for b in snap["balances"]:
+            val_color = "green" if b["value_usdt"] > 1 else "dim"
+            price_str = f"${b['price_usdt']:,.4f}" if b["price_usdt"] < 100 else f"${b['price_usdt']:,.2f}"
+            acc_table.add_row(
+                b["asset"],
+                f"{b['free']:.8f}".rstrip("0").rstrip("."),
+                f"{b['locked']:.8f}".rstrip("0").rstrip(".") if b["locked"] > 0 else "—",
+                price_str if b["asset"] not in ("USDT", "USDC", "BUSD") else "1.00",
+                f"[{val_color}]${b['value_usdt']:,.4f}[/{val_color}]",
+            )
+
+        acc_table.add_row(
+            "[bold]TOTAL[/bold]", "", "", "",
+            f"[bold cyan]${snap['total_usdt']:,.2f}[/bold cyan]",
+        )
+        console.print(acc_table)
+
+    # ── 4. Resumen bot ───────────────────────────────────────────────────────
     status = trader.risk.get_status()
     pnl_color = "green" if status["pnl_total"] >= 0 else "red"
     console.print(
-        f"[bold]Portfolio:[/bold] "
-        f"Capital [cyan]${status['capital']:,.2f}[/cyan] | "
-        f"PnL [{pnl_color}]${status['pnl_total']:+,.2f}[/{pnl_color}] | "
-        f"DD {status['drawdown']:.1%} | "
-        f"Posiciones {status['positions']}/{3} | "
-        f"Trades totales {len(trader.trades)}"
+        f"[bold]Bot:[/bold] "
+        f"Posiciones {status['positions']}/3 | "
+        f"Trades sesión {len(trader.trades)} | "
+        f"PnL sesión [{pnl_color}]${status['pnl_total']:+,.2f}[/{pnl_color}] | "
+        f"DD {status['drawdown']:.1%}"
     )
     if errors:
         console.print(f"[dim red]Errores: {' | '.join(errors[:3])}[/dim red]")
