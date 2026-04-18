@@ -57,28 +57,72 @@ def fetch_data(cfg: Config) -> pd.DataFrame:
     end   = datetime.utcnow()
     start = end - timedelta(days=cfg.months * 31 + 60)  # margen extra para indicadores
     print(f"Descargando {cfg.symbol}  {start.date()} → {end.date()} (intervalo diario)...")
-    df = yf.download(
-        cfg.symbol,
-        start=start.strftime("%Y-%m-%d"),
-        end=end.strftime("%Y-%m-%d"),
-        interval="1d",
-        auto_adjust=True,
-        progress=False,
-    )
+
+    df = pd.DataFrame()
+
+    # Método 1: yf.Ticker().history() — más estable con versiones antiguas de yfinance
+    try:
+        ticker = yf.Ticker(cfg.symbol)
+        df = ticker.history(
+            start=start.strftime("%Y-%m-%d"),
+            end=end.strftime("%Y-%m-%d"),
+            interval="1d",
+            auto_adjust=True,
+        )
+        if not df.empty:
+            df.columns = [c.lower() for c in df.columns]
+    except Exception as e:
+        print(f"  [método 1 falló: {e}]")
+
+    # Método 2: yf.download() como fallback
     if df.empty:
-        raise RuntimeError(f"Sin datos para {cfg.symbol}. Comprueba la conexión.")
+        try:
+            df = yf.download(
+                cfg.symbol,
+                start=start.strftime("%Y-%m-%d"),
+                end=end.strftime("%Y-%m-%d"),
+                interval="1d",
+                auto_adjust=True,
+                progress=False,
+            )
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = [c[0].lower() for c in df.columns]
+            else:
+                df.columns = [c.lower() for c in df.columns]
+        except Exception as e:
+            print(f"  [método 2 falló: {e}]")
 
-    # Normalizar columnas (yfinance puede devolver MultiIndex)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [c[0].lower() for c in df.columns]
-    else:
-        df.columns = [c.lower() for c in df.columns]
+    # Método 3: periodo largo como string (compatibilidad con yfinance <0.2)
+    if df.empty:
+        try:
+            ticker = yf.Ticker(cfg.symbol)
+            df = ticker.history(period="max", interval="1d")
+            df.columns = [c.lower() for c in df.columns]
+            cutoff_m3 = end - timedelta(days=cfg.months * 31)
+            df = df[df.index >= pd.Timestamp(cutoff_m3).tz_localize(df.index.tz)]
+        except Exception as e:
+            print(f"  [método 3 falló: {e}]")
 
-    df.index = pd.to_datetime(df.index)
-    df = df.dropna()
+    if df.empty:
+        raise RuntimeError(
+            f"No se pudieron descargar datos para {cfg.symbol}.\n"
+            f"  • Actualiza yfinance:  pip install --upgrade yfinance\n"
+            f"  • Comprueba conexión: curl https://query1.finance.yahoo.com/v8/finance/chart/BTC-USD"
+        )
+
+    # Normalizar índice y columnas
+    df.index = pd.to_datetime(df.index).tz_localize(None)
+    df = df.rename(columns={"Stock Splits": "splits", "Dividends": "dividends"}, errors="ignore")
+    for col in ("open", "high", "low", "close", "volume"):
+        if col not in df.columns:
+            raise RuntimeError(f"Columna '{col}' no encontrada. Columnas disponibles: {list(df.columns)}")
+
+    df = df[["open", "high", "low", "close", "volume"]].dropna()
+    df = df[df["volume"] > 0]
+
     # Recortar al periodo exacto solicitado
     cutoff = end - timedelta(days=cfg.months * 31)
-    df = df[df.index >= cutoff]
+    df = df[df.index >= pd.Timestamp(cutoff)]
     print(f"  → {len(df)} barras diarias  ({df.index[0].date()} – {df.index[-1].date()})")
     return df
 
