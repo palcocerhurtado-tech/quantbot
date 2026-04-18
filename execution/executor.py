@@ -134,6 +134,65 @@ class PaperTrader:
         return {"status": self.risk.get_status(), "positions": list(self.risk.open_positions),
                 "positions_detail": details, "n_trades": len(self.trades)}
 
+    def get_stats(self) -> dict:
+        return _calc_stats(self.trades, self.risk)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  SHARED STATS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _calc_stats(trades: list, risk) -> dict:
+    """Calcula métricas de rendimiento a partir del historial de trades."""
+    closed = [t for t in trades if t.get("type") in ("CLOSE", "CLOSE_MANUAL")]
+    if not closed:
+        # Intentar inferir PnL desde el historial de trades abiertos con pnl
+        closed = [t for t in trades if "pnl" in t]
+
+    total = len(closed)
+    if total == 0:
+        return {
+            "total_trades": 0,
+            "win_rate": 0.0,
+            "profit_factor": 0.0,
+            "expectancy": 0.0,
+            "avg_win": 0.0,
+            "avg_loss": 0.0,
+            "gross_profit": 0.0,
+            "gross_loss": 0.0,
+            "best_trade": 0.0,
+            "worst_trade": 0.0,
+            "return_pct": 0.0,
+            "open_trades": len(risk.open_positions),
+        }
+
+    pnls        = [float(t["pnl"]) for t in closed]
+    winners     = [p for p in pnls if p > 0]
+    losers      = [p for p in pnls if p <= 0]
+    gross_profit = sum(winners) if winners else 0.0
+    gross_loss   = abs(sum(losers)) if losers else 0.0
+    pf           = gross_profit / gross_loss if gross_loss > 0 else float("inf")
+    win_rate     = len(winners) / total if total > 0 else 0.0
+    avg_win      = gross_profit / len(winners) if winners else 0.0
+    avg_loss     = gross_loss / len(losers) if losers else 0.0
+    expectancy   = (win_rate * avg_win) - ((1 - win_rate) * avg_loss)
+    return_pct   = (risk.current_capital - risk.initial_capital) / risk.initial_capital
+
+    return {
+        "total_trades":  total,
+        "win_rate":      round(win_rate, 4),
+        "profit_factor": round(pf, 2) if pf != float("inf") else 999.0,
+        "expectancy":    round(expectancy, 2),
+        "avg_win":       round(avg_win, 2),
+        "avg_loss":      round(avg_loss, 2),
+        "gross_profit":  round(gross_profit, 2),
+        "gross_loss":    round(gross_loss, 2),
+        "best_trade":    round(max(pnls), 2),
+        "worst_trade":   round(min(pnls), 2),
+        "return_pct":    round(return_pct, 4),
+        "open_trades":   len(risk.open_positions),
+    }
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  LIVE TRADER
@@ -373,3 +432,6 @@ class LiveTrader:
             }
         return {"status": self.risk.get_status(), "positions": list(self.risk.open_positions),
                 "positions_detail": details, "n_trades": len(self.trades)}
+
+    def get_stats(self) -> dict:
+        return _calc_stats(self.trades, self.risk)

@@ -189,16 +189,52 @@ def run_cycle(timeframe: str) -> None:
         )
         console.print(acc_table)
 
-    # ── 4. Resumen bot ───────────────────────────────────────────────────────
+    # ── 4. Métricas del bot ──────────────────────────────────────────────────
+    stats  = trader.get_stats()
     status = trader.risk.get_status()
-    pnl_color = "green" if status["pnl_total"] >= 0 else "red"
-    console.print(
-        f"[bold]Bot:[/bold] "
-        f"Posiciones {status['positions']}/3 | "
-        f"Trades sesión {len(trader.trades)} | "
-        f"PnL sesión [{pnl_color}]${status['pnl_total']:+,.2f}[/{pnl_color}] | "
-        f"DD {status['drawdown']:.1%}"
+
+    m_table = Table(title="Métricas de la sesión", show_header=False, box=None)
+    m_table.add_column("Métrica", style="dim",   min_width=22)
+    m_table.add_column("Valor",   style="bold",  min_width=14)
+    m_table.add_column("Métrica", style="dim",   min_width=22)
+    m_table.add_column("Valor",   style="bold",  min_width=14)
+
+    pf_val   = stats["profit_factor"]
+    pf_color = "green" if pf_val >= 1.5 else ("yellow" if pf_val >= 1.0 else "red")
+    wr_color = "green" if stats["win_rate"] >= 0.5 else "yellow"
+    ret_color = "green" if stats["return_pct"] >= 0 else "red"
+    dd_color  = "green" if status["drawdown"] < 0.05 else ("yellow" if status["drawdown"] < 0.10 else "red")
+
+    m_table.add_row(
+        "Trades cerrados",   str(stats["total_trades"]),
+        "Posiciones abiertas", str(stats["open_trades"]),
     )
+    m_table.add_row(
+        "Win Rate",  f"[{wr_color}]{stats['win_rate']:.1%}[/{wr_color}]",
+        "Profit Factor", f"[{pf_color}]{pf_val:.2f}[/{pf_color}]",
+    )
+    m_table.add_row(
+        "Expectancy/trade",  f"${stats['expectancy']:+.2f}",
+        "Retorno sesión",  f"[{ret_color}]{stats['return_pct']:+.2%}[/{ret_color}]",
+    )
+    m_table.add_row(
+        "Avg Win",  f"[green]${stats['avg_win']:,.2f}[/green]",
+        "Avg Loss", f"[red]-${stats['avg_loss']:,.2f}[/red]",
+    )
+    m_table.add_row(
+        "Mejor trade",  f"[green]${stats['best_trade']:+,.2f}[/green]",
+        "Peor trade",   f"[red]${stats['worst_trade']:+,.2f}[/red]",
+    )
+    m_table.add_row(
+        "Gross Profit",  f"[green]${stats['gross_profit']:,.2f}[/green]",
+        "Gross Loss",    f"[red]${stats['gross_loss']:,.2f}[/red]",
+    )
+    m_table.add_row(
+        "Drawdown",  f"[{dd_color}]{status['drawdown']:.2%}[/{dd_color}]",
+        "Capital",   f"${status['capital']:,.2f}",
+    )
+    console.print(m_table)
+
     if errors:
         console.print(f"[dim red]Errores: {' | '.join(errors[:3])}[/dim red]")
 
