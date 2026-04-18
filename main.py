@@ -1,3 +1,21 @@
+"""
+main.py — QuantBot Crypto
+=========================
+Escanea los top-40 pares de Binance por volumen y opera los 10 más líquidos
+usando la estrategia Elliott Wave Proxy (PF 3.13, WR 63 % en backtest 50 meses).
+
+Ciclos programados:
+  • Cada 15 min → analiza velas de 15m
+  • Cada 30 min → analiza velas de 30m
+  • Cada 60 min → analiza velas de 1h
+  • Cada 90 min → analiza velas de 1h (no existe 90m en Binance)
+
+Cada ciclo:
+  1. Refresca el universo (top-40 → top-10 más líquidos) si han pasado > 30 min
+  2. Comprueba si alguna posición abierta tocó SL o TP y la cierra
+  3. Busca señales Elliott en los símbolos sin posición abierta
+  4. Abre posición si pasa el filtro de riesgo
+"""
 
 import time
 import schedule
@@ -5,202 +23,191 @@ from datetime import datetime
 from rich.console import Console
 from rich.table import Table
 
-from data.market import fetch_ohlcv, get_latest_price
-from data.news import get_news_sentiment
-from models.features import add_technical_features, add_sentiment_features
-from models.predictor import TradingPredictor
+from data.market import get_top_pairs_by_volume, fetch_ohlcv, get_latest_price
 from models.elliott_strategy import ElliottStrategy
 from execution.executor import PaperTrader
-from config.settings import SYMBOLS
+from config.settings import (
+    QUOTE, TOP_N_SCAN, TOP_N_TRADE,
+    CYCLE_TIMEFRAMES, OHLCV_LIMIT,
+    INITIAL_CAPITAL,
+)
 from logs.logger import get_logger
 
 log     = get_logger("main")
 console = Console()
 trader  = PaperTrader()
-models  = {}
-
-# ── Símbolos ────────────────────────────────────────────────────────────────
-# Acciones: señal vía modelo ML (XGBoost)
-ML_SYMBOLS = ["AAPL", "MSFT", "NVDA", "SPY"]
-
-# Crypto: señal vía Elliott Wave Proxy (backtest 50m PF 3.13, WR 63 %)
-ELLIOTT_SYMBOLS = ["BTC-USD"]
-
-# Días de histórico diario para Elliott (necesita al menos 220 barras para EMA 200)
-ELLIOTT_LOOKBACK_DAYS = 350
-
 elliott = ElliottStrategy()
 
+# ── Caché del universo (se refresca cada 30 min) ────────────────────────────
+_universe: dict = {"symbols": [], "ts": 0.0}
+UNIVERSE_TTL = 1800  # segundos
 
-# ── Entrenamiento de modelos ML ─────────────────────────────────────────────
 
-def train_all_models():
-    """Entrena un modelo XGBoost para cada símbolo del catálogo ML."""
-    console.print("\n[bold cyan]Entrenando modelos ML...[/bold cyan]")
-    for sym in ML_SYMBOLS:
+def get_universe() -> list[str]:
+    now = time.time()
+    if now - _universe["ts"] > UNIVERSE_TTL or not _universe["symbols"]:
+        console.print("[dim]Actualizando universo de pares Binance...[/dim]")
         try:
-            df   = fetch_ohlcv(sym, interval="1d", period="180d")
-            sent = get_news_sentiment(sym)
-            df   = add_technical_features(df)
-            df   = add_sentiment_features(df, sent)
-            p    = TradingPredictor(sym)
-            stats = p.train(df)
-            models[sym] = {"predictor": p}
-            console.print(f"  [green]✓[/green] {sym} — accuracy {stats.get('accuracy_cv', 0):.1%}")
+            top40 = get_top_pairs_by_volume(QUOTE, TOP_N_SCAN)
+            _universe["symbols"] = top40[:TOP_N_TRADE]
+            _universe["ts"]      = now
+            console.print(f"  [cyan]Universo:[/cyan] {', '.join(_universe['symbols'])}")
         except Exception as e:
-            console.print(f"  [red]✗[/red] {sym} — error: {e}")
+            log.error(f"Error actualizando universo: {e}")
+            if not _universe["symbols"]:
+                # Fallback manual si falla la primera vez
+                _universe["symbols"] = [
+                    f"BTC{QUOTE}", f"ETH{QUOTE}", f"BNB{QUOTE}", f"SOL{QUOTE}",
+                    f"XRP{QUOTE}", f"DOGE{QUOTE}", f"ADA{QUOTE}", f"AVAX{QUOTE}",
+                    f"TRX{QUOTE}", f"DOT{QUOTE}",
+                ]
+    return _universe["symbols"]
 
 
-# ── Ciclo principal ─────────────────────────────────────────────────────────
+# ── Ciclo de análisis ────────────────────────────────────────────────────────
 
-def run_cycle():
-    """Ciclo principal — se ejecuta cada hora."""
+def run_cycle(timeframe: str) -> None:
+    """
+    Ejecuta un ciclo completo para el timeframe dado.
+    timeframe : intervalo de velas Binance ("15m", "30m", "1h", "2h")
+    """
     now = datetime.now().strftime("%H:%M:%S")
-    console.print(f"\n[bold]── Ciclo de trading  {now} ──[/bold]")
+    console.print(f"\n[bold]── Ciclo {timeframe.upper()}  {now} ──[/bold]")
 
-    table = Table(title="Señales")
-    table.add_column("Símbolo",   style="cyan")
-    table.add_column("Precio",    style="white")
-    table.add_column("Estrategia",style="dim")
-    table.add_column("Señal",     style="bold")
-    table.add_column("Conf.",     style="white")
-    table.add_column("SL",        style="red")
-    table.add_column("TP",        style="green")
-    table.add_column("Estado",    style="white")
+    symbols = get_universe()
 
-    # ── 1. Evaluar SL/TP de posiciones abiertas ─────────────────────────
-    all_symbols = ML_SYMBOLS + ELLIOTT_SYMBOLS
-    for sym in all_symbols:
-        exit_check = trader.check_exits(sym)
-        if exit_check.get("closed"):
-            et  = exit_check["exit_type"]
-            pnl = exit_check["pnl"]
-            color = "green" if pnl > 0 else "red"
-            console.print(
-                f"  [{color}]{'✓ TP' if et == 'TP' else '✗ SL'} {sym}[/{color}]  "
-                f"PnL [bold {color}]${pnl:+.2f}[/bold {color}]"
-            )
+    table = Table(title=f"Elliott {timeframe.upper()} — {now}")
+    table.add_column("Par",      style="cyan",   min_width=10)
+    table.add_column("Precio",   style="white",  min_width=10)
+    table.add_column("Señal",    style="bold",   min_width=6)
+    table.add_column("SL",       style="red",    min_width=10)
+    table.add_column("TP",       style="green",  min_width=10)
+    table.add_column("Estado",   style="white",  min_width=14)
 
-    # ── 2. Señales ML para acciones ──────────────────────────────────────
-    for sym in ML_SYMBOLS:
+    exits_this_cycle = []
+    new_entries      = []
+    errors           = []
+
+    # ── 1. Comprobar salidas (SL/TP) de todas las posiciones abiertas ────────
+    for sym in list(trader.risk.open_positions.keys()):
         try:
-            df   = fetch_ohlcv(sym, interval="1d", period="180d")
-            sent = get_news_sentiment(sym)
-            df   = add_technical_features(df)
-            df   = add_sentiment_features(df, sent)
-
-            if sym not in models:
-                p = TradingPredictor(sym)
-                p.train(df)
-                models[sym] = {"predictor": p}
-
-            signal = models[sym]["predictor"].predict(df)
-            price  = get_latest_price(sym)
-
-            sig_color = "green" if signal["signal"] == "BUY" else \
-                        "red"   if signal["signal"] == "SELL" else "yellow"
-            result = trader.execute_signal(sym, signal)
-            estado = "✓ Abierto" if result.get("executed") else "— Hold"
-
-            table.add_row(
-                sym, f"${price:.2f}", "ML/XGBoost",
-                f"[{sig_color}]{signal['signal']}[/{sig_color}]",
-                f"{signal['confidence']:.0%}",
-                "—", "—", estado,
-            )
+            result = trader.check_exits(sym)
+            if result.get("closed"):
+                et    = result["exit_type"]
+                pnl   = result["pnl"]
+                color = "green" if pnl > 0 else "red"
+                console.print(
+                    f"  [{color}]{'✓ TP' if et == 'TP' else '✗ SL'} {sym}[/{color}]  "
+                    f"[bold {color}]${pnl:+.2f}[/bold {color}]"
+                )
+                exits_this_cycle.append(sym)
         except Exception as e:
-            table.add_row(sym, "—", "ML/XGBoost", "ERROR", "—", "—", "—", str(e)[:30])
+            log.error(f"check_exits {sym}: {e}")
 
-    # ── 3. Señales Elliott para BTC ──────────────────────────────────────
-    for sym in ELLIOTT_SYMBOLS:
+    # ── 2. Buscar nuevas señales ─────────────────────────────────────────────
+    for sym in symbols:
         try:
-            import yfinance as yf
-            from datetime import timedelta
-            end   = datetime.utcnow()
-            start = end - timedelta(days=ELLIOTT_LOOKBACK_DAYS)
-            raw = yf.Ticker(sym).history(
-                start=start.strftime("%Y-%m-%d"),
-                end=end.strftime("%Y-%m-%d"),
-                interval="1d",
-                auto_adjust=True,
-            )
-            if raw.empty:
-                raise ValueError("Sin datos de yfinance")
-            raw.columns  = [c.lower() for c in raw.columns]
-            raw.index    = raw.index.tz_localize(None)
+            df = fetch_ohlcv(sym, interval=timeframe, limit=OHLCV_LIMIT)
+            if df.empty or len(df) < 50:
+                continue
 
-            signal = elliott.get_signal(raw)
-            price  = float(raw["close"].iloc[-1])
+            signal = elliott.get_signal(df)
+            price  = float(df["close"].iloc[-1])
 
             if signal["signal"] == "BUY":
                 result = trader.execute_signal(sym, signal)
-                estado = "✓ Abierto" if result.get("executed") else "— Ya en posición"
-                sl_str = f"${signal['sl']:,.0f}"
-                tp_str = f"${signal['tp']:,.0f}"
-                sig_color = "green"
+                if result.get("executed"):
+                    estado    = "[green]✓ ABIERTO[/green]"
+                    sig_color = "green"
+                    new_entries.append(sym)
+                else:
+                    estado    = f"[dim]{result.get('reason', 'Rechazado')[:18]}[/dim]"
+                    sig_color = "green"
+                sl_str = f"${signal['sl']:,.2f}"
+                tp_str = f"${signal['tp']:,.2f}"
             else:
-                estado    = "— Espera"
+                sig_color = "yellow"
                 sl_str    = "—"
                 tp_str    = "—"
-                sig_color = "yellow"
+                # Mostrar estado de posición abierta si existe
+                if sym in trader.risk.open_positions:
+                    pos = trader.risk.open_positions[sym]
+                    unrealized = (price - pos["price"]) * pos["shares"]
+                    color = "green" if unrealized >= 0 else "red"
+                    estado = f"[{color}]Abierta ${unrealized:+.2f}[/{color}]"
+                    sl_info = trader._sl_tp.get(sym)
+                    if sl_info:
+                        sl_str = f"${sl_info['sl']:,.2f}"
+                        tp_str = f"${sl_info['tp']:,.2f}"
+                else:
+                    estado = "— Espera"
 
             table.add_row(
-                sym, f"${price:,.0f}", "Elliott Proxy",
+                sym,
+                f"${price:,.4f}" if price < 10 else f"${price:,.2f}",
                 f"[{sig_color}]{signal['signal']}[/{sig_color}]",
-                f"{signal['confidence']:.0%}",
                 sl_str, tp_str, estado,
             )
+
         except Exception as e:
-            table.add_row(sym, "—", "Elliott", "ERROR", "—", "—", "—", str(e)[:30])
+            errors.append(f"{sym}: {str(e)[:40]}")
+            log.error(f"Ciclo {timeframe} {sym}: {e}")
 
     console.print(table)
 
-    # ── 4. Resumen del portfolio ─────────────────────────────────────────
-    portfolio = trader.get_portfolio()
-    status    = portfolio["status"]
+    # ── 3. Resumen ───────────────────────────────────────────────────────────
+    status = trader.risk.get_status()
+    pnl_color = "green" if status["pnl_total"] >= 0 else "red"
     console.print(
         f"[bold]Portfolio:[/bold] "
         f"Capital [cyan]${status['capital']:,.2f}[/cyan] | "
-        f"PnL [bold {'green' if status['pnl_total'] >= 0 else 'red'}]"
-        f"${status['pnl_total']:+,.2f}[/bold {'green' if status['pnl_total'] >= 0 else 'red'}] | "
-        f"Drawdown {status['drawdown']:.1%} | "
-        f"Trades {portfolio['n_trades']}"
+        f"PnL [{pnl_color}]${status['pnl_total']:+,.2f}[/{pnl_color}] | "
+        f"DD {status['drawdown']:.1%} | "
+        f"Posiciones {status['positions']}/{3} | "
+        f"Trades totales {len(trader.trades)}"
     )
-
-    # Detalle de posiciones abiertas con SL/TP
-    if portfolio["positions_detail"]:
-        console.print("\n[bold]Posiciones abiertas:[/bold]")
-        for sym, pos in portfolio["positions_detail"].items():
-            sl_info = f"SL ${pos['sl']:,.0f}" if pos["sl"] else "SL —"
-            tp_info = f"TP ${pos['tp']:,.0f}" if pos["tp"] else "TP —"
-            pnl_color = "green" if pos["unrealized"] >= 0 else "red"
-            console.print(
-                f"  {sym}: entrada ${pos['entry']:,.2f} | actual ${pos['current']:,.2f} | "
-                f"[{pnl_color}]PnL ${pos['unrealized']:+,.2f}[/{pnl_color}] | "
-                f"{sl_info}  {tp_info}"
-            )
+    if errors:
+        console.print(f"[dim red]Errores: {' | '.join(errors[:3])}[/dim red]")
 
 
-def main():
-    console.print("[bold cyan]" + "=" * 52 + "[/bold cyan]")
-    console.print("[bold cyan]  QUANTBOT — Elliott BTC + ML Stocks[/bold cyan]")
-    console.print("[bold cyan]" + "=" * 52 + "[/bold cyan]")
-    console.print("[yellow]Modo: PAPER TRADING (sin dinero real)[/yellow]")
+# ── Programación de ciclos ────────────────────────────────────────────────────
+
+def _schedule_all() -> None:
+    for minutes, tf in CYCLE_TIMEFRAMES.items():
+        schedule.every(minutes).minutes.do(run_cycle, timeframe=tf)
+        log.info(f"Ciclo programado: cada {minutes} min → velas {tf}")
+
+
+# ── Arranque ──────────────────────────────────────────────────────────────────
+
+def main() -> None:
+    console.print("[bold cyan]" + "═" * 54 + "[/bold cyan]")
+    console.print("[bold cyan]  QUANTBOT — Elliott Crypto  (paper trading)[/bold cyan]")
+    console.print("[bold cyan]" + "═" * 54 + "[/bold cyan]")
     console.print(
-        f"  Estrategia BTC : Elliott Wave Proxy (PF 3.13, WR 63 %)\n"
-        f"  Estrategia ML  : XGBoost para {', '.join(ML_SYMBOLS)}\n"
+        f"  Estrategia : Elliott Wave Proxy  (PF 3.13 · WR 63 %)\n"
+        f"  Universo   : top-{TOP_N_SCAN} por volumen → opera los {TOP_N_TRADE} más líquidos\n"
+        f"  Quote      : {QUOTE}\n"
+        f"  Ciclos     : 15 min (15m) · 30 min (30m) · 60 min (1h) · 90 min (1h)\n"
+        f"  Capital    : ${INITIAL_CAPITAL:,.2f}  (paper — sin dinero real)\n"
     )
 
-    train_all_models()
-    run_cycle()
+    # Refrescar universo y lanzar ciclo inicial en todos los timeframes
+    get_universe()
+    for tf in set(CYCLE_TIMEFRAMES.values()):
+        run_cycle(tf)
 
-    schedule.every(1).hours.do(run_cycle)
-    console.print("\n[bold green]Bot activo. Próximo ciclo en 1 hora.[/bold green]")
-    console.print("[dim]Pulsa Ctrl+C para detener[/dim]\n")
+    _schedule_all()
+
+    console.print(
+        "\n[bold green]Bot activo.[/bold green] "
+        "Próximos ciclos: 15 min · 30 min · 60 min · 90 min\n"
+        "[dim]Ctrl+C para detener[/dim]\n"
+    )
 
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(30)
 
 
 if __name__ == "__main__":

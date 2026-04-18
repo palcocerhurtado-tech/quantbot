@@ -42,8 +42,13 @@ class PaperTrader:
         if price <= 0:
             return {"executed": False, "reason": "Precio no disponible"}
 
-        # Tamaño de posición
-        size   = self.risk.kelly_position_size(signal["confidence"], self.risk.current_capital)
+        # Tamaño de posición: SL-based si la señal trae SL, Kelly si no
+        if signal.get("sl") and signal.get("entry") and float(signal["sl"]) > 0:
+            size = self.risk.fixed_risk_position_size(float(signal["entry"]), float(signal["sl"]))
+        else:
+            size = self.risk.kelly_position_size(signal["confidence"], self.risk.current_capital)
+        if size <= 0:
+            return {"executed": False, "reason": "Tamaño de posición calculado = 0"}
         shares = size / price
         action = signal["signal"]
 
