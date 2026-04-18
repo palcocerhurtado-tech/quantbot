@@ -43,7 +43,7 @@ _universe: dict = {"symbols": [], "ts": 0.0}
 UNIVERSE_TTL = 1800  # segundos
 
 
-def get_universe() -> list[str]:
+def get_universe() -> list:
     now = time.time()
     if now - _universe["ts"] > UNIVERSE_TTL or not _universe["symbols"]:
         console.print("[dim]Actualizando universo de pares Binance...[/dim]")

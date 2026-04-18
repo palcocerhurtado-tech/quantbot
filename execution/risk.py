@@ -54,7 +54,7 @@ class RiskManager:
 
     # ── Validación pre-trade ──────────────────────────────────────────────────
 
-    def can_trade(self, symbol: str, signal: dict) -> tuple[bool, str]:
+    def can_trade(self, symbol: str, signal: dict) -> tuple:
         """
         Comprueba todas las reglas de riesgo antes de abrir posición.
         Devuelve (puede_operar: bool, razón: str)

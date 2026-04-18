@@ -21,7 +21,7 @@ TIMEOUT = 10  # segundos por request
 
 # ── Endpoints ────────────────────────────────────────────────────────────────
 
-def _get(path: str, params: dict | None = None) -> list | dict:
+def _get(path: str, params=None):
     url = BINANCE_API_BASE + path
     try:
         r = _session.get(url, params=params, timeout=TIMEOUT)
@@ -34,7 +34,7 @@ def _get(path: str, params: dict | None = None) -> list | dict:
 
 # ── Universo dinámico ────────────────────────────────────────────────────────
 
-def get_top_pairs_by_volume(quote: str = QUOTE, top_n: int = TOP_N_SCAN) -> list[str]:
+def get_top_pairs_by_volume(quote: str = QUOTE, top_n: int = TOP_N_SCAN) -> list:
     """
     Devuelve los top_n pares de Binance ordenados por volumen en quote_asset (24h).
     Excluye pares de stablecoins y tokens apalancados (UP/DOWN/BULL/BEAR).
