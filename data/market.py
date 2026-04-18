@@ -44,12 +44,15 @@ def _get(path: str, params=None):
 def get_top_pairs_by_volume(quote: str = QUOTE, top_n: int = TOP_N_SCAN) -> list:
     """
     Devuelve los top_n pares de Binance ordenados por volumen en quote_asset (24h).
-    Excluye pares de stablecoins y tokens apalancados (UP/DOWN/BULL/BEAR).
+    Excluye stablecoins, tokens apalancados y tokens con caracteres no-ASCII.
     """
     data = _get("/api/v3/ticker/24hr")
 
-    STABLE_SUFFIXES = {"USDT", "USDC", "BUSD", "DAI", "TUSD", "USDP"}
-    EXCLUDED_TOKENS = {"UP", "DOWN", "BULL", "BEAR"}
+    STABLE_BASE = {
+        "USDT", "USDC", "BUSD", "DAI", "TUSD", "USDP", "FDUSD",
+        "USD1", "USDD", "USDX", "GUSD", "PYUSD", "FRAX",
+    }
+    EXCLUDED_SUFFIX = {"UP", "DOWN", "BULL", "BEAR", "3L", "3S", "2L", "2S"}
 
     pairs = []
     for t in data:
@@ -57,10 +60,21 @@ def get_top_pairs_by_volume(quote: str = QUOTE, top_n: int = TOP_N_SCAN) -> list
         if not sym.endswith(quote):
             continue
         base = sym[: -len(quote)]
-        if base in STABLE_SUFFIXES:
+
+        # Excluir stablecoins
+        if base in STABLE_BASE:
             continue
-        if any(base.endswith(tok) for tok in EXCLUDED_TOKENS):
+        # Excluir tokens apalancados
+        if any(base.endswith(s) for s in EXCLUDED_SUFFIX):
             continue
+        # Excluir tokens con caracteres no-ASCII (spam/scam chinos, etc.)
+        if not base.isascii() or not base.isalnum():
+            continue
+        # Excluir pares con precio irrealmente bajo (evita tokens basura)
+        price = float(t.get("lastPrice", 0))
+        if price <= 0:
+            continue
+
         vol = float(t.get("quoteVolume", 0))
         if vol <= 0:
             continue
