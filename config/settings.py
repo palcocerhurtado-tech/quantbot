@@ -27,7 +27,11 @@ MAX_CONCURRENT_POSITIONS = int(os.getenv("MAX_POSITIONS",   "3"))     # máx pos
 KELLY_FRACTION         = 0.25
 MIN_SIGNAL_SCORE       = 0.60
 
-# ── Claves de APIs (opcionales) ───────────────────────────────────────────────
+# ── Modo de operación ─────────────────────────────────────────────────────────
+# "paper" = simulado sin dinero real  |  "live" = órdenes reales en Binance
+TRADING_MODE = os.getenv("TRADING_MODE", "paper")
+
+# ── Claves de APIs ────────────────────────────────────────────────────────────
 BINANCE_API_KEY    = os.getenv("BINANCE_API_KEY",    "")
 BINANCE_SECRET_KEY = os.getenv("BINANCE_SECRET_KEY", "")
 NEWS_API_KEY       = os.getenv("NEWS_API_KEY",       "")

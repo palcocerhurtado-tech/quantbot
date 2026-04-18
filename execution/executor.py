@@ -1,209 +1,375 @@
+"""
+execution/executor.py
+=====================
+PaperTrader  — simula operaciones sin dinero real.
+LiveTrader   — ejecuta órdenes reales en Binance Spot via REST API.
 
+Selección automática según TRADING_MODE en .env:
+    TRADING_MODE=paper  →  PaperTrader  (por defecto)
+    TRADING_MODE=live   →  LiveTrader
+"""
+
+import hashlib
+import hmac
+import math
+import time as _time
 from datetime import datetime
-from execution.risk import RiskManager
+from urllib.parse import urlencode
+
+import requests as _requests
+
+from config.settings import (
+    BINANCE_API_BASE, BINANCE_API_KEY, BINANCE_SECRET_KEY,
+    RISK_PER_TRADE, MAX_POSITION_PCT,
+)
 from data.market import get_latest_price
+from execution.risk import RiskManager
 from logs.logger import get_logger, trade_logger
 
 log = get_logger("executor")
 
-class PaperTrader:
-    """
-    Ejecuta trades simulados (paper trading).
-    No toca dinero real. Perfecto para validar la estrategia.
 
-    Soporta dos modos de gestión de salida:
-      1. SL/TP automático  — cuando la señal incluye 'sl' y 'tp'
-         (usado por ElliottStrategy y estrategias de reglas fijas)
-      2. Señal de cambio   — sale cuando llega señal SELL/BUY contraria
-         (usado por el predictor ML original)
-    """
+# ══════════════════════════════════════════════════════════════════════════════
+#  PAPER TRADER
+# ══════════════════════════════════════════════════════════════════════════════
+
+class PaperTrader:
+    """Simula trades sin tocar dinero real."""
 
     def __init__(self):
         self.risk      = RiskManager()
         self.trades    = []
-        # Niveles SL/TP por símbolo: {symbol: {"sl": float, "tp": float}}
         self._sl_tp: dict = {}
 
-    # ── Apertura de posición ────────────────────────────────────────────────
-
     def execute_signal(self, symbol: str, signal: dict) -> dict:
-        """
-        Procesa una señal y abre posición si pasa el risk check.
-
-        Si la señal incluye 'sl' y 'tp' los almacena para evaluarlos
-        en cada ciclo con check_exits().
-        """
         can_trade, reason = self.risk.can_trade(symbol, signal)
         if not can_trade:
-            log.info(f"{symbol}: trade rechazado — {reason}")
             return {"executed": False, "reason": reason}
 
         price = get_latest_price(symbol)
         if price <= 0:
             return {"executed": False, "reason": "Precio no disponible"}
 
-        # Tamaño de posición: SL-based si la señal trae SL, Kelly si no
         if signal.get("sl") and signal.get("entry") and float(signal["sl"]) > 0:
             size = self.risk.fixed_risk_position_size(float(signal["entry"]), float(signal["sl"]))
         else:
             size = self.risk.kelly_position_size(signal["confidence"], self.risk.current_capital)
         if size <= 0:
-            return {"executed": False, "reason": "Tamaño de posición calculado = 0"}
+            return {"executed": False, "reason": "Size = 0"}
+
         shares = size / price
-        action = signal["signal"]
-
         trade = {
-            "symbol":         symbol,
-            "action":         action,
-            "price":          round(price, 4),
-            "size_usd":       round(size, 2),
-            "shares":         round(shares, 6),
-            "confidence":     signal["confidence"],
-            "timestamp":      datetime.utcnow().isoformat(),
+            "symbol": symbol, "action": signal["signal"],
+            "price": round(price, 6), "size_usd": round(size, 2),
+            "shares": round(shares, 8), "confidence": signal["confidence"],
+            "timestamp": datetime.utcnow().isoformat(),
             "capital_before": round(self.risk.current_capital, 2),
-            # Guardar SL/TP si vienen en la señal
-            "sl":             signal.get("sl", None),
-            "tp":             signal.get("tp", None),
+            "sl": signal.get("sl"), "tp": signal.get("tp"),
         }
-
         self.risk.open_positions[symbol] = trade
-
-        # Registrar SL/TP para evaluación en check_exits()
         if signal.get("sl") and signal.get("tp"):
-            self._sl_tp[symbol] = {
-                "sl":     signal["sl"],
-                "tp":     signal["tp"],
-                "shares": shares,
-            }
-            log.info(
-                f"SL/TP registrado para {symbol}: SL={signal['sl']:.2f} "
-                f"TP={signal['tp']:.2f}"
-            )
-
+            self._sl_tp[symbol] = {"sl": signal["sl"], "tp": signal["tp"], "shares": shares}
         trade_logger.log_trade(trade)
         self.trades.append(trade)
-        log.info(
-            f"TRADE ABIERTO: {action} {symbol} @ ${price:.2f} "
-            f"| ${size:.2f} ({shares:.6f} unidades)"
-        )
+        log.info(f"[PAPER] BUY {symbol} @ ${price:.4f} | ${size:.2f}")
         return {"executed": True, "trade": trade}
 
-    # ── Evaluación de SL/TP en cada ciclo ──────────────────────────────────
-
     def check_exits(self, symbol: str) -> dict:
-        """
-        Comprueba si el precio actual ha tocado SL o TP de una posición abierta.
-        Llama a esto en cada ciclo del bot para los símbolos que usan SL/TP fijo.
-
-        Devuelve {"checked": False}  si no hay posición con SL/TP
-        Devuelve {"closed": True/False, "reason": ..., "pnl": ...}  si comprueba
-        """
         if symbol not in self._sl_tp or symbol not in self.risk.open_positions:
             return {"checked": False}
-
         levels = self._sl_tp[symbol]
         price  = get_latest_price(symbol)
         if price <= 0:
-            return {"checked": True, "closed": False, "reason": "Precio no disponible"}
-
+            return {"checked": True, "closed": False}
         sl, tp = levels["sl"], levels["tp"]
-        entry  = self.risk.open_positions[symbol]["price"]
-        shares = levels["shares"]
-
         hit_sl = price <= sl
         hit_tp = price >= tp
-
         if hit_sl or hit_tp:
             exit_price = sl if hit_sl else tp
             exit_type  = "SL" if hit_sl else "TP"
-            pnl = (exit_price - entry) * shares
+            entry      = self.risk.open_positions[symbol]["price"]
+            pnl        = (exit_price - entry) * levels["shares"]
             self.risk.update_capital(pnl)
             del self.risk.open_positions[symbol]
             del self._sl_tp[symbol]
-
             result = {
-                "checked":     True,
-                "closed":      True,
-                "symbol":      symbol,
-                "exit_type":   exit_type,
-                "entry_price": entry,
-                "exit_price":  round(exit_price, 4),
-                "current_price": round(price, 4),
-                "pnl":         round(pnl, 2),
-                "timestamp":   datetime.utcnow().isoformat(),
+                "checked": True, "closed": True, "symbol": symbol,
+                "exit_type": exit_type, "entry_price": entry,
+                "exit_price": round(exit_price, 6), "pnl": round(pnl, 2),
+                "timestamp": datetime.utcnow().isoformat(),
             }
             trade_logger.log_trade({**result, "type": "CLOSE"})
-            emoji = "✓" if pnl > 0 else "✗"
-            log.info(
-                f"{emoji} {exit_type} alcanzado: {symbol} "
-                f"entry={entry:.2f} exit={exit_price:.2f} PnL=${pnl:.2f}"
-            )
+            log.info(f"[PAPER] {'TP' if exit_type=='TP' else 'SL'} {symbol} PnL=${pnl:.2f}")
             return result
-
-        # Posición abierta, SL/TP no tocados aún
-        unrealized = (price - entry) * shares
-        log.info(
-            f"{symbol} posición abierta | precio={price:.2f} "
-            f"SL={sl:.2f} TP={tp:.2f} PnL_no_realizado=${unrealized:.2f}"
-        )
-        return {
-            "checked":       True,
-            "closed":        False,
-            "current_price": round(price, 4),
-            "sl":            sl,
-            "tp":            tp,
-            "unrealized_pnl": round(unrealized, 2),
-        }
-
-    # ── Cierre manual ───────────────────────────────────────────────────────
+        unrealized = (price - self.risk.open_positions[symbol]["price"]) * levels["shares"]
+        return {"checked": True, "closed": False, "current_price": price,
+                "sl": sl, "tp": tp, "unrealized_pnl": round(unrealized, 2)}
 
     def close_position(self, symbol: str) -> dict:
-        """Cierra manualmente una posición abierta al precio de mercado."""
         if symbol not in self.risk.open_positions:
-            return {"closed": False, "reason": "No hay posición abierta"}
-
+            return {"closed": False, "reason": "Sin posición"}
         entry  = self.risk.open_positions[symbol]
         price  = get_latest_price(symbol)
-        action = entry["action"]
-
-        if action == "BUY":
-            pnl = (price - entry["price"]) * entry["shares"]
-        else:
-            pnl = (entry["price"] - price) * entry["shares"]
-
+        pnl    = (price - entry["price"]) * entry["shares"]
         self.risk.update_capital(pnl)
         del self.risk.open_positions[symbol]
         self._sl_tp.pop(symbol, None)
-
-        result = {
-            "symbol":      symbol,
-            "entry_price": entry["price"],
-            "exit_price":  round(price, 4),
-            "pnl":         round(pnl, 2),
-            "pnl_pct":     round(pnl / entry["size_usd"] * 100, 2),
-            "timestamp":   datetime.utcnow().isoformat(),
-        }
+        result = {"symbol": symbol, "entry_price": entry["price"],
+                  "exit_price": round(price, 6), "pnl": round(pnl, 2),
+                  "timestamp": datetime.utcnow().isoformat()}
         trade_logger.log_trade({**result, "type": "CLOSE_MANUAL"})
-        log.info(f"POSICIÓN CERRADA MANUAL: {symbol} PnL=${pnl:.2f} ({result['pnl_pct']:.1f}%)")
         return result
 
-    # ── Portfolio ───────────────────────────────────────────────────────────
-
     def get_portfolio(self) -> dict:
-        positions_detail = {}
+        details = {}
         for sym, pos in self.risk.open_positions.items():
             price = get_latest_price(sym)
-            unrealized = (price - pos["price"]) * pos["shares"] if price > 0 else 0
-            positions_detail[sym] = {
-                "entry":       pos["price"],
-                "current":     round(price, 4),
-                "unrealized":  round(unrealized, 2),
-                "sl":          self._sl_tp.get(sym, {}).get("sl"),
-                "tp":          self._sl_tp.get(sym, {}).get("tp"),
+            unr   = (price - pos["price"]) * pos["shares"] if price > 0 else 0
+            details[sym] = {
+                "entry": pos["price"], "current": round(price, 6),
+                "unrealized": round(unr, 2),
+                "sl": self._sl_tp.get(sym, {}).get("sl"),
+                "tp": self._sl_tp.get(sym, {}).get("tp"),
             }
-        return {
-            "status":           self.risk.get_status(),
-            "positions":        list(self.risk.open_positions.keys()),
-            "positions_detail": positions_detail,
-            "n_trades":         len(self.trades),
-        }
+        return {"status": self.risk.get_status(), "positions": list(self.risk.open_positions),
+                "positions_detail": details, "n_trades": len(self.trades)}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  LIVE TRADER
+# ══════════════════════════════════════════════════════════════════════════════
+
+class LiveTrader:
+    """
+    Ejecuta órdenes reales en Binance Spot.
+    - Market orders para entrada y salida.
+    - SL/TP gestionados internamente (evaluados cada ciclo).
+    - Capital sincronizado desde el balance USDT real de Binance.
+    """
+
+    def __init__(self):
+        if not BINANCE_API_KEY or not BINANCE_SECRET_KEY:
+            raise RuntimeError(
+                "BINANCE_API_KEY y BINANCE_SECRET_KEY deben estar en el .env para modo live."
+            )
+        self.risk       = RiskManager()
+        self.trades     = []
+        self._sl_tp: dict   = {}
+        self._lot_cache: dict = {}
+
+        # Sincronizar capital desde Binance
+        balance = self._get_quote_balance()
+        if balance > 0:
+            self.risk.initial_capital = balance
+            self.risk.current_capital = balance
+            self.risk.peak_capital    = balance
+            log.info(f"[LIVE] Balance Binance: ${balance:.2f} USDT")
+        else:
+            log.warning("[LIVE] No se pudo obtener balance — usando capital por defecto")
+
+    # ── Binance REST privado ──────────────────────────────────────────────────
+
+    def _signed(self, method: str, path: str, params: dict = None) -> dict:
+        """Realiza una request firmada HMAC-SHA256 a la API privada de Binance."""
+        params = dict(params or {})
+        params["timestamp"]  = int(_time.time() * 1000)
+        params["recvWindow"] = 5000
+        query = urlencode(params)
+        sig   = hmac.new(
+            BINANCE_SECRET_KEY.encode(),
+            query.encode(),
+            hashlib.sha256,
+        ).hexdigest()
+        params["signature"] = sig
+        headers = {"X-MBX-APIKEY": BINANCE_API_KEY}
+        url     = BINANCE_API_BASE + path
+        r = getattr(_requests, method.lower())(url, params=params, headers=headers, timeout=10)
+        r.raise_for_status()
+        return r.json()
+
+    def _get_quote_balance(self) -> float:
+        from config.settings import QUOTE
+        try:
+            data = self._signed("GET", "/api/v3/account")
+            for asset in data.get("balances", []):
+                if asset["asset"] == QUOTE:
+                    return float(asset["free"])
+        except Exception as e:
+            log.error(f"Error obteniendo balance: {e}")
+        return 0.0
+
+    def _sync_capital(self):
+        bal = self._get_quote_balance()
+        if bal > 0:
+            self.risk.current_capital = bal
+            if bal > self.risk.peak_capital:
+                self.risk.peak_capital = bal
+
+    # ── Lot size y redondeo ────────────────────────────────────────────────────
+
+    def _get_lot_size(self, symbol: str) -> dict:
+        if symbol in self._lot_cache:
+            return self._lot_cache[symbol]
+        try:
+            data = _requests.get(
+                BINANCE_API_BASE + "/api/v3/exchangeInfo",
+                params={"symbol": symbol}, timeout=10,
+            ).json()
+            for filt in data["symbols"][0]["filters"]:
+                if filt["filterType"] == "LOT_SIZE":
+                    info = {
+                        "step": float(filt["stepSize"]),
+                        "min":  float(filt["minQty"]),
+                    }
+                    self._lot_cache[symbol] = info
+                    return info
+        except Exception as e:
+            log.warning(f"lot_size {symbol}: {e}")
+        return {"step": 1e-5, "min": 1e-5}
+
+    def _round_qty(self, symbol: str, qty: float) -> float:
+        lot  = self._get_lot_size(symbol)
+        step = lot["step"]
+        if step <= 0:
+            return qty
+        precision = max(0, -int(math.floor(math.log10(step))))
+        qty = math.floor(qty / step) * step
+        qty = round(qty, precision)
+        return max(qty, lot["min"])
+
+    # ── Órdenes ────────────────────────────────────────────────────────────────
+
+    def _market_order(self, symbol: str, side: str, qty: float) -> dict:
+        qty_r = self._round_qty(symbol, qty)
+        log.info(f"[LIVE] Orden MARKET {side} {qty_r} {symbol}")
+        return self._signed("POST", "/api/v3/order", {
+            "symbol":   symbol,
+            "side":     side,
+            "type":     "MARKET",
+            "quantity": qty_r,
+        })
+
+    def _fill_price(self, order: dict, fallback: float) -> float:
+        fills = order.get("fills", [])
+        if fills:
+            total_qty  = sum(float(f["qty"])   for f in fills)
+            total_cost = sum(float(f["price"]) * float(f["qty"]) for f in fills)
+            return total_cost / total_qty if total_qty > 0 else fallback
+        return fallback
+
+    # ── Interfaz pública (misma que PaperTrader) ──────────────────────────────
+
+    def execute_signal(self, symbol: str, signal: dict) -> dict:
+        can_trade, reason = self.risk.can_trade(symbol, signal)
+        if not can_trade:
+            return {"executed": False, "reason": reason}
+
+        price = get_latest_price(symbol)
+        if price <= 0:
+            return {"executed": False, "reason": "Precio no disponible"}
+
+        if signal.get("sl") and signal.get("entry") and float(signal["sl"]) > 0:
+            size = self.risk.fixed_risk_position_size(float(signal["entry"]), float(signal["sl"]))
+        else:
+            size = self.risk.kelly_position_size(signal["confidence"], self.risk.current_capital)
+        if size <= 0:
+            return {"executed": False, "reason": "Size = 0"}
+
+        qty = size / price
+        try:
+            order      = self._market_order(symbol, "BUY", qty)
+            fill       = self._fill_price(order, price)
+            actual_qty = float(order.get("executedQty", qty))
+
+            trade = {
+                "symbol": symbol, "action": "BUY",
+                "price": round(fill, 6), "size_usd": round(fill * actual_qty, 2),
+                "shares": actual_qty, "confidence": signal["confidence"],
+                "timestamp": datetime.utcnow().isoformat(),
+                "order_id": order.get("orderId"),
+                "sl": signal.get("sl"), "tp": signal.get("tp"),
+            }
+            self.risk.open_positions[symbol] = trade
+            if signal.get("sl") and signal.get("tp"):
+                self._sl_tp[symbol] = {
+                    "sl": signal["sl"], "tp": signal["tp"], "shares": actual_qty,
+                }
+            self._sync_capital()
+            trade_logger.log_trade(trade)
+            self.trades.append(trade)
+            log.info(f"[LIVE] BUY {symbol} @ ${fill:.4f} qty={actual_qty} order={order.get('orderId')}")
+            return {"executed": True, "trade": trade}
+        except Exception as e:
+            log.error(f"[LIVE] Error BUY {symbol}: {e}")
+            return {"executed": False, "reason": str(e)}
+
+    def check_exits(self, symbol: str) -> dict:
+        if symbol not in self._sl_tp or symbol not in self.risk.open_positions:
+            return {"checked": False}
+        levels = self._sl_tp[symbol]
+        price  = get_latest_price(symbol)
+        if price <= 0:
+            return {"checked": True, "closed": False}
+        sl, tp   = levels["sl"], levels["tp"]
+        hit_sl   = price <= sl
+        hit_tp   = price >= tp
+        if hit_sl or hit_tp:
+            exit_type = "SL" if hit_sl else "TP"
+            shares    = levels["shares"]
+            try:
+                order      = self._market_order(symbol, "SELL", shares)
+                fill       = self._fill_price(order, price)
+                entry      = self.risk.open_positions[symbol]["price"]
+                pnl        = (fill - entry) * float(order.get("executedQty", shares))
+                del self.risk.open_positions[symbol]
+                del self._sl_tp[symbol]
+                self._sync_capital()
+                result = {
+                    "checked": True, "closed": True, "symbol": symbol,
+                    "exit_type": exit_type, "entry_price": entry,
+                    "exit_price": round(fill, 6), "pnl": round(pnl, 2),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                trade_logger.log_trade({**result, "type": "CLOSE"})
+                log.info(f"[LIVE] {'TP' if exit_type=='TP' else 'SL'} {symbol} PnL=${pnl:.2f}")
+                return result
+            except Exception as e:
+                log.error(f"[LIVE] Error SELL {symbol}: {e}")
+                return {"checked": True, "closed": False, "reason": str(e)}
+        unrealized = (price - self.risk.open_positions[symbol]["price"]) * levels["shares"]
+        return {"checked": True, "closed": False, "current_price": price,
+                "sl": sl, "tp": tp, "unrealized_pnl": round(unrealized, 2)}
+
+    def close_position(self, symbol: str) -> dict:
+        if symbol not in self.risk.open_positions:
+            return {"closed": False, "reason": "Sin posición"}
+        pos = self.risk.open_positions[symbol]
+        try:
+            order = self._market_order(symbol, "SELL", pos["shares"])
+            fill  = self._fill_price(order, get_latest_price(symbol))
+            pnl   = (fill - pos["price"]) * float(order.get("executedQty", pos["shares"]))
+            del self.risk.open_positions[symbol]
+            self._sl_tp.pop(symbol, None)
+            self._sync_capital()
+            result = {"symbol": symbol, "entry_price": pos["price"],
+                      "exit_price": round(fill, 6), "pnl": round(pnl, 2),
+                      "timestamp": datetime.utcnow().isoformat()}
+            trade_logger.log_trade({**result, "type": "CLOSE_MANUAL"})
+            return result
+        except Exception as e:
+            log.error(f"[LIVE] Error close {symbol}: {e}")
+            return {"closed": False, "reason": str(e)}
+
+    def get_portfolio(self) -> dict:
+        details = {}
+        for sym, pos in self.risk.open_positions.items():
+            price = get_latest_price(sym)
+            unr   = (price - pos["price"]) * pos["shares"] if price > 0 else 0
+            details[sym] = {
+                "entry": pos["price"], "current": round(price, 6),
+                "unrealized": round(unr, 2),
+                "sl": self._sl_tp.get(sym, {}).get("sl"),
+                "tp": self._sl_tp.get(sym, {}).get("tp"),
+            }
+        return {"status": self.risk.get_status(), "positions": list(self.risk.open_positions),
+                "positions_detail": details, "n_trades": len(self.trades)}

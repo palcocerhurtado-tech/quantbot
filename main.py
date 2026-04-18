@@ -25,18 +25,23 @@ from rich.table import Table
 
 from data.market import get_top_pairs_by_volume, fetch_ohlcv, get_latest_price
 from models.elliott_strategy import ElliottStrategy
-from execution.executor import PaperTrader
+from execution.executor import PaperTrader, LiveTrader
 from config.settings import (
     QUOTE, TOP_N_SCAN, TOP_N_TRADE,
     CYCLE_TIMEFRAMES, OHLCV_LIMIT,
-    INITIAL_CAPITAL,
+    INITIAL_CAPITAL, TRADING_MODE,
 )
 from logs.logger import get_logger
 
 log     = get_logger("main")
 console = Console()
-trader  = PaperTrader()
 elliott = ElliottStrategy()
+
+if TRADING_MODE == "live":
+    trader = LiveTrader()
+    console.print("[bold red]⚠  MODO LIVE — ÓRDENES REALES EN BINANCE[/bold red]")
+else:
+    trader = PaperTrader()
 
 # ── Caché del universo (se refresca cada 30 min) ────────────────────────────
 _universe: dict = {"symbols": [], "ts": 0.0}
@@ -184,12 +189,13 @@ def main() -> None:
     console.print("[bold cyan]" + "═" * 54 + "[/bold cyan]")
     console.print("[bold cyan]  QUANTBOT — Elliott Crypto  (paper trading)[/bold cyan]")
     console.print("[bold cyan]" + "═" * 54 + "[/bold cyan]")
+    mode_label = "[bold red]LIVE — DINERO REAL[/bold red]" if TRADING_MODE == "live" else "[yellow]PAPER — simulado[/yellow]"
     console.print(
+        f"  Modo       : {mode_label}\n"
         f"  Estrategia : Elliott Wave Proxy  (PF 3.13 · WR 63 %)\n"
         f"  Universo   : top-{TOP_N_SCAN} por volumen → opera los {TOP_N_TRADE} más líquidos\n"
         f"  Quote      : {QUOTE}\n"
         f"  Ciclos     : 15 min (15m) · 30 min (30m) · 60 min (1h) · 90 min (1h)\n"
-        f"  Capital    : ${INITIAL_CAPITAL:,.2f}  (paper — sin dinero real)\n"
     )
 
     # Refrescar universo y lanzar ciclo inicial en todos los timeframes
