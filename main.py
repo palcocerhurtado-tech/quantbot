@@ -234,9 +234,11 @@ def run_cycle(timeframe: str) -> None:
         "Gross Loss",    f"[red]${stats['gross_loss']:,.2f}[/red]",
     )
     mode_label = "[bold red]LIVE[/bold red]" if TRADING_MODE == "live" else "[yellow]PAPER[/yellow]"
+    real_capital = snap.get("total_usdt", status["capital"]) if TRADING_MODE == "live" and not snap.get("error") else status["capital"]
+    cap_label    = f"${real_capital:,.2f}" + (" [dim](Binance)[/dim]" if TRADING_MODE == "live" and not snap.get("error") else "")
     m_table.add_row(
         "Drawdown",  f"[{dd_color}]{status['drawdown']:.2%}[/{dd_color}]",
-        "Capital",   f"${status['capital']:,.2f}",
+        "Capital",   cap_label,
     )
     m_table.add_row(
         "Modo",      mode_label,
