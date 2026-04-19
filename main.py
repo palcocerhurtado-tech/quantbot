@@ -79,6 +79,10 @@ def run_cycle(timeframe: str) -> None:
     now = datetime.now().strftime("%H:%M:%S")
     console.print(f"\n[bold]── Ciclo {timeframe.upper()}  {now} ──[/bold]")
 
+    # Sincronizar capital real desde Binance al inicio de cada ciclo (solo live)
+    if hasattr(trader, "_sync_capital"):
+        trader._sync_capital()
+
     symbols = get_universe()
 
     table = Table(title=f"Elliott {timeframe.upper()} — {now}")
@@ -229,9 +233,14 @@ def run_cycle(timeframe: str) -> None:
         "Gross Profit",  f"[green]${stats['gross_profit']:,.2f}[/green]",
         "Gross Loss",    f"[red]${stats['gross_loss']:,.2f}[/red]",
     )
+    mode_label = "[bold red]LIVE[/bold red]" if TRADING_MODE == "live" else "[yellow]PAPER[/yellow]"
     m_table.add_row(
         "Drawdown",  f"[{dd_color}]{status['drawdown']:.2%}[/{dd_color}]",
         "Capital",   f"${status['capital']:,.2f}",
+    )
+    m_table.add_row(
+        "Modo",      mode_label,
+        "PnL sesión", f"[{'green' if status['pnl_total'] >= 0 else 'red'}]${status['pnl_total']:+,.2f}[/{'green' if status['pnl_total'] >= 0 else 'red'}]",
     )
     console.print(m_table)
 
