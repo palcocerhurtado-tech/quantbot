@@ -3,6 +3,7 @@ from config.settings import (
     INITIAL_CAPITAL, MAX_POSITION_PCT,
     MAX_DRAWDOWN_PCT, KELLY_FRACTION,
     RISK_PER_TRADE, MAX_CONCURRENT_POSITIONS,
+    MAX_PORTFOLIO_EXPOSURE_PCT, MAX_SPREAD_PCT, MAX_SLIPPAGE_BPS,
 )
 from logs.logger import get_logger
 
@@ -54,7 +55,7 @@ class RiskManager:
 
     # ── Validación pre-trade ──────────────────────────────────────────────────
 
-    def can_trade(self, symbol: str, signal: dict) -> tuple:
+    def can_trade(self, symbol: str, signal: dict, trader=None, context=None) -> tuple:
         """
         Comprueba todas las reglas de riesgo antes de abrir posición.
         Devuelve (puede_operar: bool, razón: str)
@@ -72,13 +73,43 @@ class RiskManager:
         if drawdown >= MAX_DRAWDOWN_PCT:
             return False, f"Drawdown máximo alcanzado: {drawdown:.1%}"
 
-        if symbol in self.open_positions:
+        positions = self.open_positions
+        capital = self.current_capital
+        if trader is not None:
+            positions = getattr(trader, "open_positions", positions)
+            trader_risk = getattr(trader, "risk", None)
+            if trader_risk is not None:
+                capital = float(getattr(trader_risk, "current_capital", capital))
+            else:
+                portfolio = trader.get_portfolio()
+                capital = float(portfolio.get("status", {}).get("capital", capital))
+
+        if symbol in positions:
             return False, f"Ya hay posición abierta en {symbol}"
 
-        if len(self.open_positions) >= MAX_CONCURRENT_POSITIONS:
+        if len(positions) >= MAX_CONCURRENT_POSITIONS:
             return False, f"Máximo de posiciones concurrentes alcanzado ({MAX_CONCURRENT_POSITIONS})"
 
-        if self.current_capital < 50:
+        context = context or {}
+        notional = float(context.get("notional") or 0.0)
+        if capital > 0 and notional > capital * MAX_POSITION_PCT:
+            return False, f"Exposición por símbolo demasiado alta: {notional:.2f} > {capital * MAX_POSITION_PCT:.2f}"
+
+        current_exposure = 0.0
+        for position in positions.values():
+            current_exposure += float(position.get("size_usd") or position.get("notional") or 0.0)
+        if capital > 0 and current_exposure + notional > capital * MAX_PORTFOLIO_EXPOSURE_PCT:
+            return False, "Exposición máxima de cartera superada"
+
+        spread_pct = float(context.get("spread_pct") or 0.0)
+        if spread_pct > MAX_SPREAD_PCT:
+            return False, f"Spread demasiado alto: {spread_pct:.2%}"
+
+        slippage_bps = float(context.get("slippage_bps") or 0.0)
+        if slippage_bps > MAX_SLIPPAGE_BPS:
+            return False, f"Slippage esperado demasiado alto: {slippage_bps:.1f} bps"
+
+        if capital < 50:
             return False, "Capital insuficiente (<$50)"
 
         return True, "OK"

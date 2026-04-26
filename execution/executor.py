@@ -20,9 +20,13 @@ import requests as _requests
 
 from config.settings import (
     BINANCE_API_BASE, BINANCE_API_KEY, BINANCE_SECRET_KEY,
-    RISK_PER_TRADE, MAX_POSITION_PCT,
+    RISK_PER_TRADE, MAX_POSITION_PCT, LIVE_TRADING_ENABLED,
+    STOP_ATR_MULT, MIN_STOP_DISTANCE_PCT, BREAKEVEN_TRIGGER_R,
+    TRAILING_TRIGGER_R, TRAILING_ATR_MULT, PARTIAL_TAKE_PROFIT_R,
+    PARTIAL_TAKE_PROFIT_PCT,
 )
 from data.market import get_latest_price
+from execution.ledger import OrderLedger
 from execution.risk import RiskManager
 from logs.logger import get_logger, trade_logger
 
@@ -38,41 +42,157 @@ class PaperTrader:
 
     def __init__(self):
         self.risk      = RiskManager()
+        if self.risk.current_capital < 50:
+            self.risk.initial_capital = 10_000.0
+            self.risk.current_capital = 10_000.0
+            self.risk.peak_capital = 10_000.0
         self.trades    = []
         self._sl_tp: dict = {}
+        self.exit_plans: dict = {}
+        self.ledger = OrderLedger()
+
+    @property
+    def open_positions(self) -> dict:
+        return self.risk.open_positions
+
+    def _get_market(self, symbol: str) -> dict:
+        price = get_latest_price(symbol)
+        return {"price": price, "spread_pct": 0.0, "slippage_bps": 0.0}
+
+    def _client_order_id(self, symbol: str, label: str) -> str:
+        return f"qb-{label.lower()}-{symbol.lower()}-{int(_time.time() * 1000)}"
+
+    def _reject(self, symbol: str, signal: dict, reason: str, *, side: str = "BUY", context=None) -> dict:
+        client_order_id = self._client_order_id(symbol, signal.get("signal", side))
+        self.ledger.record_rejection(
+            client_order_id=client_order_id,
+            symbol=symbol,
+            side=side,
+            reason=reason,
+            signal=signal,
+            mode="paper",
+            metadata=context or {},
+        )
+        log.info(f"Trade rechazado {symbol} {signal.get('signal')}: {reason} clientOrderId={client_order_id}")
+        return {"executed": False, "reason": reason, "client_order_id": client_order_id}
 
     def execute_signal(self, symbol: str, signal: dict) -> dict:
-        can_trade, reason = self.risk.can_trade(symbol, signal)
-        if not can_trade:
-            return {"executed": False, "reason": reason}
-
-        price = get_latest_price(symbol)
+        price = float(signal.get("price") or 0.0)
         if price <= 0:
-            return {"executed": False, "reason": "Precio no disponible"}
+            try:
+                price = float(self._get_market(symbol).get("price") or 0.0)
+            except Exception:  # noqa: BLE001 - tests use this to skip market validation
+                price = float(signal.get("price") or 0.0)
 
-        if signal.get("sl") and signal.get("entry") and float(signal["sl"]) > 0:
+        atr = float(signal.get("atr") or 0.0)
+        stop_distance = 0.0
+        size = 0.0
+        shares = 0.0
+        risk_budget = self.risk.current_capital * RISK_PER_TRADE
+        if price > 0 and atr > 0:
+            stop_distance = max(atr * STOP_ATR_MULT, price * MIN_STOP_DISTANCE_PCT)
+            shares = risk_budget / stop_distance if stop_distance > 0 else 0.0
+            size = shares * price
+        context = {
+            "price": price,
+            "requested_qty": shares,
+            "notional": size,
+        }
+        if not signal.get("price"):
+            try:
+                market = self._get_market(symbol)
+                context["spread_pct"] = float(market.get("spread_pct") or 0.0)
+                context["slippage_bps"] = float(market.get("slippage_bps") or 0.0)
+            except Exception:  # noqa: BLE001
+                pass
+
+        can_trade, reason = self.risk.can_trade(symbol, signal, trader=self, context=context)
+        if not can_trade:
+            return self._reject(symbol, signal, reason, context=context)
+
+        if price <= 0:
+            return self._reject(symbol, signal, "Precio no disponible", context=context)
+
+        if size <= 0 and signal.get("sl") and signal.get("entry") and float(signal["sl"]) > 0:
             size = self.risk.fixed_risk_position_size(float(signal["entry"]), float(signal["sl"]))
-        else:
+        elif size <= 0:
             size = self.risk.kelly_position_size(signal["confidence"], self.risk.current_capital)
         if size <= 0:
-            return {"executed": False, "reason": "Size = 0"}
+            return self._reject(symbol, signal, "Size = 0", context=context)
 
         shares = size / price
+        stop_distance = stop_distance or abs(float(signal.get("entry", price)) - float(signal.get("sl", price)))
+        stop_price = float(signal.get("sl") or (price - stop_distance))
+        tp_price = float(signal.get("tp") or (price + stop_distance * 2.0))
+        client_order_id = self._client_order_id(symbol, "buy")
         trade = {
             "symbol": symbol, "action": signal["signal"],
-            "price": round(price, 6), "size_usd": round(size, 2),
+            "price": round(price, 6), "entry_price": round(price, 6), "size_usd": size,
             "shares": round(shares, 8), "confidence": signal["confidence"],
             "timestamp": datetime.utcnow().isoformat(),
             "capital_before": round(self.risk.current_capital, 2),
-            "sl": signal.get("sl"), "tp": signal.get("tp"),
+            "sl": stop_price, "tp": tp_price,
+            "stop_distance": stop_distance, "risk_budget": risk_budget,
+            "client_order_id": client_order_id,
         }
         self.risk.open_positions[symbol] = trade
-        if signal.get("sl") and signal.get("tp"):
-            self._sl_tp[symbol] = {"sl": signal["sl"], "tp": signal["tp"], "shares": shares}
+        self._sl_tp[symbol] = {"sl": stop_price, "tp": tp_price, "shares": shares}
+        self.exit_plans[symbol] = {
+            "entry_price": price,
+            "stop_price": stop_price,
+            "take_profit_price": tp_price,
+            "stop_distance": stop_distance,
+            "risk_budget": risk_budget,
+            "partial_taken": False,
+            "highest_price": price,
+        }
         trade_logger.log_trade(trade)
         self.trades.append(trade)
         log.info(f"[PAPER] BUY {symbol} @ ${price:.4f} | ${size:.2f}")
         return {"executed": True, "trade": trade}
+
+    def manage_position(self, symbol: str, market: dict) -> dict:
+        if symbol not in self.risk.open_positions or symbol not in self.exit_plans:
+            return {"executed": False, "reason": "Sin posición"}
+
+        price = float(market.get("price") or 0.0)
+        atr = float(market.get("atr") or 0.0)
+        plan = self.exit_plans[symbol]
+        position = self.risk.open_positions[symbol]
+        entry = float(plan["entry_price"])
+        stop_distance = float(plan["stop_distance"])
+        shares = float(position["shares"])
+        if price <= 0 or stop_distance <= 0 or shares <= 0:
+            return {"executed": False, "reason": "Datos de mercado inválidos"}
+
+        plan["highest_price"] = max(float(plan.get("highest_price", entry)), price)
+        r_multiple = (price - entry) / stop_distance
+
+        if not plan.get("partial_taken") and r_multiple >= PARTIAL_TAKE_PROFIT_R:
+            sell_shares = shares * PARTIAL_TAKE_PROFIT_PCT
+            remaining = shares - sell_shares
+            pnl = (price - entry) * sell_shares
+            position["shares"] = remaining
+            plan["partial_taken"] = True
+            if r_multiple >= BREAKEVEN_TRIGGER_R:
+                plan["stop_price"] = max(float(plan["stop_price"]), entry)
+            self.trades.append({"type": "CLOSE", "symbol": symbol, "pnl": pnl, "signal_label": "TP"})
+            return {"executed": True, "signal_label": "TP", "shares": sell_shares, "pnl": round(pnl, 2)}
+
+        if r_multiple >= TRAILING_TRIGGER_R and atr > 0:
+            trailing_stop = price - (atr * TRAILING_ATR_MULT)
+            plan["stop_price"] = max(float(plan["stop_price"]), trailing_stop, entry)
+
+        if price <= float(plan["stop_price"]):
+            pnl = (price - entry) * shares
+            self.risk.update_capital(pnl)
+            del self.risk.open_positions[symbol]
+            del self.exit_plans[symbol]
+            self._sl_tp.pop(symbol, None)
+            self.trades.append({"type": "CLOSE", "symbol": symbol, "pnl": pnl, "signal_label": "STOP"})
+            return {"executed": True, "signal_label": "STOP", "pnl": round(pnl, 2)}
+
+        return {"executed": False, "signal_label": "HOLD"}
 
     def check_exits(self, symbol: str) -> dict:
         if symbol not in self._sl_tp or symbol not in self.risk.open_positions:
