@@ -1,120 +1,152 @@
-
 import time
 import schedule
 from datetime import datetime
+
 from rich.console import Console
 from rich.table import Table
 
-from data.market import fetch_ohlcv, get_latest_price
-from data.news import get_news_sentiment
-from data.reddit import get_reddit_sentiment
-from models.features import add_technical_features, add_sentiment_features
-from models.predictor import TradingPredictor
+from data.market import fetch_klines, fetch_top_usdt_pairs, get_latest_price, _is_circuit_open
 from execution.executor import PaperTrader
-from config.settings import SYMBOLS
+from config.settings import SYMBOLS, TIMEFRAMES, KLINES_LIMIT
 from logs.logger import get_logger
 
-log     = console = Console()
 log     = get_logger("main")
+console = Console()
 trader  = PaperTrader()
-models  = {}
 
-SYMBOLS_ACTIVE = ["AAPL", "MSFT", "NVDA", "SPY"]
+# Dynamic symbol universe — updated each cycle from 24hr ticker
+_universe: list[str] = list(SYMBOLS)
 
-def train_all_models():
-    """Entrena un modelo para cada símbolo al arrancar."""
-    console.print("\n[bold cyan]Entrenando modelos...[/bold cyan]")
-    for sym in SYMBOLS_ACTIVE:
-        try:
-            df   = fetch_ohlcv(sym, interval="1d", period="180d")
-            sent = get_news_sentiment(sym)
-            df   = add_technical_features(df)
-            df   = add_sentiment_features(df, sent)
-            p    = TradingPredictor(sym)
-            stats= p.train(df)
-            models[sym] = {"predictor": p, "df": df}
-            console.print(f"  [green]✓[/green] {sym} — accuracy {stats.get('accuracy_cv', 0):.1%}")
-        except Exception as e:
-            console.print(f"  [red]✗[/red] {sym} — error: {e}")
 
-def run_cycle():
-    """Ciclo principal — se ejecuta cada hora."""
+def _update_universe() -> None:
+    global _universe
+    console.print("Actualizando universo de pares Binance...")
+    try:
+        top = fetch_top_usdt_pairs(min_volume_usdt=5_000_000, top_n=20)
+        if top:
+            _universe = top
+            log.info(f"Universo actualizado: {len(_universe)} pares")
+    except Exception as e:
+        log.error(f"Error actualizando universo: {e}")
+
+
+def _build_signal(df) -> dict:
+    """Placeholder signal using simple momentum logic until Elliott model is wired in."""
+    if df.empty or len(df) < 20:
+        return {"signal": "HOLD", "confidence": 0.0, "sl": 0.0, "tp": 0.0}
+
+    close  = df["close"].iloc[-1]
+    ma20   = df["close"].rolling(20).mean().iloc[-1]
+    ma50   = df["close"].rolling(50).mean().iloc[-1] if len(df) >= 50 else ma20
+
+    if close > ma20 > ma50:
+        signal, conf = "BUY",  0.62
+    elif close < ma20 < ma50:
+        signal, conf = "SELL", 0.62
+    else:
+        signal, conf = "HOLD", 0.0
+
+    sl = round(close * 0.98, 6) if signal == "BUY"  else round(close * 1.02, 6)
+    tp = round(close * 1.03, 6) if signal == "BUY"  else round(close * 0.97, 6)
+    return {"signal": signal, "confidence": conf, "sl": sl, "tp": tp}
+
+
+def run_cycle(timeframe: str) -> None:
     now = datetime.now().strftime("%H:%M:%S")
-    console.print(f"\n[bold]Ciclo de trading — {now}[/bold]")
+    console.rule(f"Ciclo {timeframe.upper()}  {now}")
 
-    table = Table(title="Señales actuales")
-    table.add_column("Símbolo",    style="cyan")
-    table.add_column("Precio",     style="white")
-    table.add_column("Señal",      style="bold")
-    table.add_column("Confianza",  style="white")
-    table.add_column("RSI",        style="white")
-    table.add_column("Ejecutado",  style="white")
+    # Bail early if we already know the network is down
+    if _is_circuit_open():
+        log.warning(f"Ciclo {timeframe} omitido — circuit breaker activo")
+        return
 
-    for sym in SYMBOLS_ACTIVE:
+    _update_universe()
+
+    table = Table(title=f"Elliott {timeframe.upper()} — {now}")
+    table.add_column("Par",     style="cyan",   no_wrap=True)
+    table.add_column("Precio",  style="white",  no_wrap=True)
+    table.add_column("Señal",   style="bold",   no_wrap=True)
+    table.add_column("SL",      style="white",  no_wrap=True)
+    table.add_column("TP",      style="white",  no_wrap=True)
+    table.add_column("Estado",  style="white",  no_wrap=True)
+
+    errors: list[str] = []
+
+    for symbol in _universe:
+        # Stop processing remaining symbols if circuit opens mid-cycle
+        if _is_circuit_open():
+            log.warning(f"Circuit breaker abierto — omitiendo resto de {timeframe}")
+            break
+
         try:
-            df   = fetch_ohlcv(sym, interval="1d", period="180d")
-            sent = get_news_sentiment(sym)
-            df   = add_technical_features(df)
-            df   = add_sentiment_features(df, sent)
+            df = fetch_klines(symbol, timeframe, KLINES_LIMIT)
+            if df.empty:
+                log.error(f"Ciclo {timeframe} {symbol}: sin datos")
+                continue
 
-            if sym not in models:
-                p = TradingPredictor(sym)
-                p.train(df)
-                models[sym] = {"predictor": p}
+            price  = get_latest_price(symbol) or df["close"].iloc[-1]
+            signal = _build_signal(df)
+            result = trader.execute_signal(symbol, signal)
 
-            predictor = models[sym]["predictor"]
-            signal    = predictor.predict(df)
-            price     = get_latest_price(sym)
-            rsi       = round(df["rsi"].iloc[-1], 1)
-
-            sig_color = "green" if signal["signal"] == "BUY" else                         "red"   if signal["signal"] == "SELL" else "yellow"
-
-            result    = trader.execute_signal(sym, signal)
-            executed  = "✓ SÍ" if result["executed"] else "— NO"
+            sig_style = (
+                "green" if signal["signal"] == "BUY"
+                else "red" if signal["signal"] == "SELL"
+                else "yellow"
+            )
+            estado = "✓ ejecutado" if result.get("executed") else result.get("reason", "—")
 
             table.add_row(
-                sym,
-                f"${price:.2f}",
-                f"[{sig_color}]{signal['signal']}[/{sig_color}]",
-                f"{signal['confidence']:.1%}",
-                str(rsi),
-                executed
+                symbol,
+                f"{price:.4f}",
+                f"[{sig_style}]{signal['signal']}[/{sig_style}]",
+                f"{signal['sl']:.4f}",
+                f"{signal['tp']:.4f}",
+                estado,
             )
+
         except Exception as e:
-            table.add_row(sym, "—", "ERROR", "—", "—", str(e))
+            log.error(f"Ciclo {timeframe} {symbol}: {e}")
+            errors.append(f"{symbol}: {str(e)[:50]}")
 
     console.print(table)
 
-    # Estado del portfolio
     portfolio = trader.get_portfolio()
     status    = portfolio["status"]
-    console.print(f"[bold]Portfolio:[/bold] "
-                  f"Capital ${status['capital']:,.2f} | "
-                  f"PnL ${status['pnl_total']:+,.2f} | "
-                  f"Drawdown {status['drawdown']:.1%} | "
-                  f"Trades {portfolio['n_trades']}")
+    console.print(
+        f"[bold]Capital:[/bold] ${status['capital']:,.2f} | "
+        f"PnL ${status['pnl_total']:+,.2f} | "
+        f"Drawdown {status['drawdown']:.1%} | "
+        f"Trades {portfolio['n_trades']}"
+    )
 
-def main():
-    console.print("[bold cyan]" + "=" * 50 + "[/bold cyan]")
-    console.print("[bold cyan]  QUANTBOT — SISTEMA DE TRADING ACTIVO[/bold cyan]")
-    console.print("[bold cyan]" + "=" * 50 + "[/bold cyan]")
-    console.print("[yellow]Modo: PAPER TRADING (sin dinero real)[/yellow]")
+    if errors:
+        console.print(
+            f"[red]Errores:[/red] " + " | ".join(errors[:3])
+        )
 
-    # Entrena modelos al arrancar
-    train_all_models()
 
-    # Primer ciclo inmediato
-    run_cycle()
+def main() -> None:
+    console.print("[bold cyan]" + "=" * 52 + "[/bold cyan]")
+    console.print("[bold cyan]  QUANTBOT — BINANCE MULTI-TIMEFRAME BOT[/bold cyan]")
+    console.print("[bold cyan]" + "=" * 52 + "[/bold cyan]")
+    console.print("[yellow]Modo: PAPER TRADING (sin dinero real)[/yellow]\n")
 
-    # Programa ciclo cada hora
-    schedule.every(1).hours.do(run_cycle)
+    # Run initial cycles immediately
+    for tf in TIMEFRAMES:
+        run_cycle(tf)
 
-    console.print("\n[bold green]Bot activo. Próximo ciclo en 1 hora.[/bold green]")
+    # Schedule recurring cycles
+    schedule.every(15).minutes.do(run_cycle, "15m")
+    schedule.every(30).minutes.do(run_cycle, "30m")
+    schedule.every(1).hours.do(run_cycle, "1h")
+
+    console.print("\n[bold green]Bot activo.[/bold green]")
     console.print("[dim]Pulsa Ctrl+C para detener[/dim]\n")
 
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(10)
+
 
 if __name__ == "__main__":
     main()
